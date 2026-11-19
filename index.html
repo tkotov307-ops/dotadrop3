@@ -3,911 +3,317 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0d0e12">
-  <meta name="description" content="NEONDROP — кейсы Dota 2, апгрейды и контракты. Только виртуальный баланс.">
-  <title>NEONDROP — Dota 2 Cases</title>
+  <meta name="theme-color" content="#0A0F0D">
+  <meta name="description" content="MoneyDrop — премиальные денежные кейсы и сейфы.">
+  <title>MoneyDrop — Денежные кейсы</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    :root{color-scheme:dark;--bg:#0d0e12;--panel:#15161d;--panel2:#1b1c25;--line:#ffffff12;--muted:#8d8d9b;--text:#f4f2f8;--purple:#8b5cf6;--green:#10b981;--gold:#f2b84b;--red:#ef536b}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px;background:radial-gradient(ellipse at 75% -5%,#6139a01c,transparent 35%),var(--bg);color:var(--text);font:14px/1.45 Arial,Helvetica,sans-serif}button,input,select{font:inherit}button{color:inherit;cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #b49aff;outline-offset:2px}button:disabled{opacity:.5;cursor:not-allowed}.shell{min-height:100vh;overflow:hidden}.topbar{height:72px;position:sticky;top:0;z-index:20;background:#0d0e12ed;border-bottom:1px solid var(--line);backdrop-filter:blur(16px)}.topbar-inner{max-width:1280px;height:100%;margin:auto;padding:0 28px;display:flex;align-items:center;gap:40px}.brand{border:0;background:none;display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.7px;white-space:nowrap}.brand em{font-style:normal;color:#a98aff}.brand-mark{width:29px;height:29px;display:grid;place-items:center;border-radius:9px;background:linear-gradient(145deg,#a17bff,#6334bd);box-shadow:0 0 20px #8558e044;font-size:19px}.nav{height:100%;display:flex;align-items:center;gap:5px}.nav button,.menu-toggle{border:0;border-radius:8px;background:transparent;color:#9b9ba8;padding:9px 11px;font-size:12px;font-weight:700;transition:.18s}.nav button:hover,.nav button.active{background:#8b5cf61c;color:#fff}.top-actions{margin-left:auto;display:flex;align-items:center;gap:12px}.demo-button{border:1px solid #10b98135;border-radius:8px;background:#10b98114;color:#d9ffef;padding:9px 11px;font-size:10px;font-weight:700;white-space:nowrap}.demo-button strong{color:#47dda7}.balance{font-weight:700;white-space:nowrap;font-size:12px}.balance:before{content:"◉";color:#b79aff;margin-right:7px}.avatar-button{display:flex;align-items:center;gap:6px;border:0;background:none;color:#b9b8c2}.avatar{width:31px;height:31px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#a27aff,#452a7f);font-weight:bold}.menu-toggle{display:none;font-size:20px;padding:4px}
-    .wrap{max-width:1280px;margin:auto;padding:0 28px}.live{height:65px;display:flex;align-items:center;gap:15px;overflow:hidden}.live-label{flex:0 0 auto;font-size:9px;font-weight:800;letter-spacing:1px}.live-label i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#ee5575;box-shadow:0 0 10px #ee5575;margin-right:7px;animation:pulse 1.7s infinite}.live-list{display:flex;align-items:center;gap:8px;overflow:hidden;flex:1}.live-card{position:relative;display:flex;align-items:center;gap:7px;min-width:165px;max-width:165px;height:41px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:linear-gradient(110deg,#ffffff0a,#ffffff03)}.live-art{width:28px;height:28px;display:grid;place-items:center;border-radius:6px;background:#ffffff0b;font-size:16px;flex-shrink:0}.live-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#c1bfca;font-size:8px;flex:1}.live-price{font-size:8px;white-space:nowrap}.live-tip{display:none;position:absolute;z-index:4;top:45px;left:2px;width:160px;padding:8px;border-radius:7px;background:#24242e;border:1px solid var(--line);font-size:9px;color:#aaa}.live-tip b{display:block;color:white}.live-card:hover .live-tip{display:block}.arrow{width:28px;height:28px;border-radius:7px;border:1px solid var(--line);background:#171820;color:#aaa;flex:0 0 auto}
-    .main{padding-top:2px;padding-bottom:50px}.hero{position:relative;min-height:334px;overflow:hidden;border:1px solid #a77af32b;border-radius:16px;background:radial-gradient(ellipse at 76% 52%,#814bd04a,transparent 35%),linear-gradient(110deg,#191720,#1b1724 57%,#15141c);display:flex}.hero:before{content:"";position:absolute;inset:0;opacity:.13;background-image:linear-gradient(#c9b0ff22 1px,transparent 1px),linear-gradient(90deg,#c9b0ff22 1px,transparent 1px);background-size:50px 50px;mask-image:linear-gradient(90deg,transparent 20%,#000)}.hero-copy{position:relative;z-index:2;padding:36px 42px}.event-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #a687f233;border-radius:20px;background:#8b5cf615;color:#c6adff;font-size:8px;font-weight:800;letter-spacing:.5px}.event-tag i{width:6px;height:6px;border-radius:50%;background:#ae89ff;box-shadow:0 0 9px #ae89ff}.hero h1{font-size:40px;line-height:1.08;letter-spacing:-1.6px;margin:17px 0 11px}.hero h1 span{color:#aa8aff}.hero p{color:#aaa8b5;font-size:12px;line-height:1.7;margin:0 0 17px}.primary,.open-button,.upgrade-button{border:0;border-radius:8px;background:linear-gradient(110deg,#9267f3,#7849df);box-shadow:0 6px 19px #8052eb32;color:white;padding:11px 15px;font-size:11px;font-weight:800;transition:.18s}.primary:hover,.open-button:hover,.upgrade-button:hover{filter:brightness(1.13);transform:translateY(-1px)}.hero-stats{display:flex;gap:18px;margin-top:20px;color:#9997a4;font-size:9px}.hero-stats b{color:#eee;font-size:12px;margin-right:3px}.hero-art{position:absolute;right:2%;top:0;width:48%;height:100%;display:grid;place-items:center}.orbit{position:absolute;width:310px;height:310px;border:1px dashed #af89ff28;border-radius:50%;animation:turn 50s linear infinite}.orbit:after{content:"";position:absolute;width:7px;height:7px;top:28px;left:60px;border-radius:50%;background:#c9aaff;box-shadow:0 0 12px #a879ff}.orbit.inner{width:230px;height:230px;border-style:solid;border-color:#a47be51d;animation:none}.chest{position:relative;width:200px;height:170px;transform:perspective(500px) rotateY(-7deg);filter:drop-shadow(0 18px 26px #0009)}.chest-glow{position:absolute;left:-15px;bottom:0;width:230px;height:130px;border-radius:50%;background:#8b4efb50;filter:blur(30px)}.chest-lid{position:absolute;z-index:2;top:22px;left:12px;width:176px;height:60px;border:1px solid #ebcaff;background:linear-gradient(140deg,#b47bfa,#7141b8 60%,#472d77);border-radius:50% 50% 5px 5px/60% 60% 5px 5px;box-shadow:inset 0 5px 13px #fff3}.chest-body{position:absolute;left:12px;bottom:14px;width:176px;height:98px;background:linear-gradient(145deg,#8d5bd8,#3c225f 60%,#241842);border:1px solid #d5abfc;clip-path:polygon(0 0,100% 0,91% 100%,9% 100%);box-shadow:inset 0 0 22px #e6bdff35}.chest-body:before{content:"";position:absolute;left:80px;width:16px;height:100%;background:#edca8044;border-left:1px solid #ffe4a980;border-right:1px solid #e8ba6e77}.chest-lock{position:absolute;z-index:3;top:29px;left:74px;color:#ffe2a0;font-size:29px;text-shadow:0 0 13px #ffcd73}.coin{position:absolute;width:37px;height:37px;border:1px solid #dcba8b99;border-radius:50%;display:grid;place-items:center;color:#f6d18b;background:radial-gradient(circle at 35% 30%,#7155a9,#30244c);box-shadow:0 0 18px #8e60e63d}.coin.one{right:13%;top:26%}.coin.two{left:16%;bottom:18%}.coin.three{left:13%;top:40%;width:26px;height:26px;font-size:12px}.sticker{position:absolute;right:10%;bottom:39px;padding:8px 10px;border:1px solid #ffffff25;border-radius:7px;background:#15131dcc;color:#dbc895;font-size:8px;transform:rotate(-7deg);line-height:1.5}.sticker b{font-size:10px;color:#f6d18b;letter-spacing:1px}.hero-dots{position:absolute;right:20px;bottom:17px;display:flex;gap:5px}.hero-dots i{width:5px;height:5px;border-radius:5px;background:#6c6879}.hero-dots i:first-child{width:18px;background:#a27bf3}
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin:15px 0 37px}.stat{min-height:64px;display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(110deg,#171920,#14151b)}.stat-icon{width:33px;height:33px;border-radius:9px;display:grid;place-items:center;background:#8b5cf620;color:#b89aff;font-size:17px}.stat:nth-child(2) .stat-icon{background:#10b98119;color:#43d9a1}.stat:nth-child(3) .stat-icon{background:#f59e0b19;color:#f1b656}.stat small{display:block;color:#858491;font-size:7px;font-weight:bold;letter-spacing:.6px}.stat b{display:block;margin-top:2px;font-size:13px}.stat b em{color:#777784;font-size:8px;font-style:normal;font-weight:400;margin-left:4px}.green{color:#39d79b!important}.gold{color:#e8bc5c!important}.red{color:#f27684!important}
-    .section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:0 0 14px}.eyebrow{display:flex;align-items:center;gap:6px;color:#ad91ef;font-size:8px;font-weight:800;letter-spacing:1px;margin-bottom:5px}.section-head h2,.contents h2{margin:0;font-size:21px;letter-spacing:-.5px}.section-head h2 span,.contents h2 span{color:#777784}.link{border:0;background:none;color:#ad91ef;font-size:9px;font-weight:bold}
-    .risk-panel{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 16px;border:1px solid #916bd42c;border-radius:10px;background:linear-gradient(100deg,#191620,#15151c);margin-bottom:12px}.risk-intro{display:flex;align-items:center;gap:9px}.risk-icon{width:35px;height:35px;border-radius:9px;background:#8b5cf61d;color:#b99aff;display:grid;place-items:center;font-size:18px}.risk-intro b{display:block;font-size:10px}.risk-intro small{display:block;color:#83828f;font-size:8px;margin-top:2px}.risk-controls{display:flex;gap:5px}.risk-controls button,.risk-mini button{min-width:55px;padding:6px 8px;border:1px solid #ffffff12;border-radius:7px;background:#171820;display:flex;flex-direction:column;align-items:center;line-height:1.2}.risk-controls button b,.risk-mini button b{font-size:13px}.risk-controls button small,.risk-mini button small{color:#858491;font-size:6px;font-weight:bold}.risk-controls .selected,.risk-mini .selected{border-color:#a17af5aa;background:#8b5cf620}.risk-controls button:nth-child(1) b{color:#43d99e}.risk-controls button:nth-child(2) b{color:#aa89ff}.risk-controls button:nth-child(3) b{color:#f2ac55}.risk-controls button:nth-child(4) b{color:#f06075}.odds{text-align:right}.odds small{display:block;color:#858491;font-size:7px;font-weight:bold}.odds b{color:#e6c46f;font-size:18px}
-    .case-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px}.case-grid.single{grid-template-columns:1fr}.case-grid.single .case-card{max-width:245px}.case-card{--case:#a98aff;position:relative;overflow:hidden;min-width:0;text-align:left;border:1px solid var(--line);border-radius:11px;background:linear-gradient(155deg,#1a1b24,#14151b);padding:0;display:flex;flex-direction:column;transition:transform .2s,border-color .2s,box-shadow .2s}.case-card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--case) 65%,transparent);box-shadow:0 8px 27px color-mix(in srgb,var(--case) 18%,transparent)}.case-card:after{content:"";height:2px;background:var(--case);opacity:.55}.case-badge{position:absolute;z-index:2;top:9px;left:9px;padding:4px 6px;border:1px solid color-mix(in srgb,var(--case) 45%,transparent);border-radius:5px;background:#101016cc;color:var(--case);font-size:7px;font-weight:800;letter-spacing:.3px}.case-art{height:122px;display:grid;place-items:center;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 77%,color-mix(in srgb,var(--case) 24%,transparent),transparent 65%),linear-gradient(120deg,#171820,#17161d)}.case-art:before{content:"";position:absolute;bottom:-44px;width:140px;height:88px;border:1px solid color-mix(in srgb,var(--case) 20%,transparent);border-radius:50%;transform:rotate(-8deg)}.case-halo{position:absolute;width:85px;height:85px;border:1px solid color-mix(in srgb,var(--case) 20%,transparent);border-radius:50%;box-shadow:0 0 25px color-mix(in srgb,var(--case) 10%,transparent)}.case-symbol{z-index:1;color:var(--case);font-size:58px;text-shadow:0 0 24px color-mix(in srgb,var(--case) 55%,transparent);filter:drop-shadow(0 5px 12px color-mix(in srgb,var(--case) 70%,transparent));transition:.2s}.case-card:hover .case-symbol{transform:scale(1.12) translateY(-3px)}.case-spark{position:absolute;right:21%;top:22%;color:#f5d992;text-shadow:0 0 8px #ffd879}.case-word{position:absolute;right:8px;bottom:8px;color:#aaa4bb55;font-size:6px;font-weight:bold;letter-spacing:1px;text-align:right}.case-info{padding:10px;display:flex;flex-direction:column}.case-title{font-size:10px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.case-desc{color:#858491;font-size:8px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.case-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:10px}.case-price{font-size:12px;font-weight:bold}.case-go{width:23px;height:23px;display:grid;place-items:center;border-radius:7px;background:#ffffff0b;color:var(--case);font-size:15px}.mint{--case:#48cf9a}.violet{--case:#a583ff}.blue{--case:#63a7ff}.orange{--case:#f1a756}.pink{--case:#ed79c6}.gold-case{--case:#f3c35f}.red-case{--case:#ed5b6d}.purple{--case:#c187ff}.category{margin-top:32px}
-    .back{border:0;background:none;color:#aaa9b5;padding:6px 0;margin:3px 0 14px;font-size:10px}.back:hover{color:white}.opening-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:16px}.opening-head h1,.page-title h1{margin:0 0 4px;font-size:27px;letter-spacing:-.7px}.opening-head p,.page-title p{margin:0;color:#92919e;font-size:10px}.price-head{text-align:right;font-size:16px;font-weight:bold}.price-head small{display:block;color:#868591;font-size:7px;letter-spacing:.7px;margin-top:3px}.risk-mini{display:flex;gap:6px;margin-bottom:11px}.risk-mini button{display:inline-flex;flex-direction:row;gap:7px;min-width:0;padding:7px 10px;color:#ccc;font-size:9px}.risk-mini button span{color:#999;font-size:8px}
-    .roulette{position:relative;overflow:hidden;padding:13px 15px 11px;border:1px solid var(--line);border-radius:12px;background:radial-gradient(ellipse at 50% 65%,#35254a30,transparent 60%),linear-gradient(120deg,#171820,#14151b)}.roulette-top{display:flex;justify-content:space-between;color:#878692;font-size:7px;font-weight:bold;letter-spacing:.7px}.roulette-window{height:206px;overflow:hidden;position:relative;margin:13px 0;border-radius:8px;border:1px solid #ffffff0b;background:#101116}.roulette-window:before,.roulette-window:after{content:"";position:absolute;z-index:2;top:0;bottom:0;width:12%;pointer-events:none}.roulette-window:before{left:0;background:linear-gradient(90deg,#101116,transparent)}.roulette-window:after{right:0;background:linear-gradient(270deg,#101116,transparent)}.roulette-track{height:100%;width:max-content;display:flex;align-items:stretch;gap:8px;margin-left:calc(50% - 800px);padding:9px 12px}.roulette-item{width:136px;height:100%;padding:7px;border:1px solid var(--line);border-radius:8px;background:linear-gradient(155deg,#1d1e28,#16171e);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}.roulette-item .item-art{width:75px;height:70px}.roulette-item>span:not(.item-art){max-width:100%;height:20px;overflow:hidden;text-align:center;color:#b0afbb;font-size:8px;line-height:1.3}.roulette-item>b{font-size:10px}.pointer{position:absolute;z-index:4;top:33px;bottom:80px;left:50%;width:2px;transform:translateX(-50%);background:#a785ff;box-shadow:0 0 12px #9a69ff}.pointer:before{content:"";position:absolute;top:0;left:-5px;border-top:8px solid #b091ff;border-left:6px solid transparent;border-right:6px solid transparent}.rolling .roulette-track{animation:roll 2.45s cubic-bezier(.08,.75,.12,1) forwards}.stopped .roulette-track{transform:translateX(-720px)}@keyframes roll{0%{transform:translateX(0)}75%{transform:translateX(-610px)}100%{transform:translateX(-720px)}}.roulette-controls{display:flex;align-items:center;gap:13px}.quantity{display:flex;flex-direction:column;gap:4px}.quantity small{color:#858491;font-size:7px;font-weight:bold}.quantity-buttons{display:flex;gap:4px}.quantity button{min-width:29px;padding:6px 5px;border:1px solid transparent;border-radius:6px;background:#1d1e27;color:#aaa9b6;font-size:9px}.quantity button.selected{border-color:#8b5cf67a;background:#8b5cf61a;color:#c9b4ff}.fast-toggle{display:flex;align-items:center;gap:6px;margin-left:auto;border:0;background:none;color:#aaa9b6;font-size:8px}.toggle{width:27px;height:15px;padding:2px;border-radius:12px;background:#383842}.toggle i{display:block;width:11px;height:11px;border-radius:50%;background:#aaa;transition:.18s}.fast-toggle.on .toggle{background:#8b5cf6}.fast-toggle.on .toggle i{background:white;transform:translateX(12px)}.open-button{display:flex;align-items:center;gap:7px;white-space:nowrap;padding:10px 12px}.balance-note{margin-top:9px;color:#81808c;font-size:8px}.balance-note b{font-weight:500}.contents{padding-top:26px}.items-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.item-card,.owned{--rarity:#719edb;position:relative;overflow:hidden;min-width:0;padding:9px;border:1px solid var(--line);border-radius:9px;background:linear-gradient(145deg,#191b23,#15161d);display:flex;flex-direction:column;align-items:flex-start}.item-card:after,.owned:after,.win-item:after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--rarity);opacity:.6}.item-art{--item:#74a9dc;position:relative;overflow:hidden;width:100%;height:81px;flex:0 0 auto;border:1px solid color-mix(in srgb,var(--item) 20%,transparent);border-radius:7px;background:radial-gradient(ellipse at 50% 77%,color-mix(in srgb,var(--item) 22%,transparent),transparent 65%),linear-gradient(140deg,#20212a,#181920);display:grid;place-items:center}.item-art:before{content:"";position:absolute;width:49px;height:49px;border-radius:50%;background:color-mix(in srgb,var(--item) 18%,transparent);filter:blur(12px)}.item-art b{position:relative;color:var(--item);font-size:36px;text-shadow:0 0 15px color-mix(in srgb,var(--item) 60%,transparent)}.item-art i{position:absolute;right:5px;bottom:4px;color:color-mix(in srgb,var(--item) 55%,transparent);font-size:7px;font-style:normal;font-weight:bold}.common{--rarity:#74a9dc;--item:#74a9dc}.uncommon{--rarity:#54bd8e;--item:#54c392}.rare{--rarity:#718fe7;--item:#718fe7}.mythical{--rarity:#a86ce3;--item:#ad74e9}.immortal{--rarity:#e9a648;--item:#f1b34f}.arcana{--rarity:#e95a70;--item:#ef6379}.item-rarity{margin-top:7px;color:var(--rarity);font-size:7px;font-weight:bold;letter-spacing:.4px;text-transform:uppercase}.item-name{min-height:25px;margin-top:4px;color:#e0dee7;font-size:8px;line-height:1.45}.item-hero{margin-top:3px;color:#858491;font-size:8px}.item-value{margin-top:9px;color:#e8e6ed;font-size:10px;font-weight:bold}
-    .modal-bg{position:fixed;inset:0;z-index:50;padding:18px;display:grid;place-items:center;background:#08090ddd;backdrop-filter:blur(7px)}.modal{position:relative;width:min(620px,100%);max-height:90vh;overflow:auto;padding:25px;border:1px solid #a37aff40;border-radius:15px;background:radial-gradient(ellipse at 50% 0,#45276e4d,transparent 48%),#181920;box-shadow:0 20px 70px #0009;text-align:center}.modal-x{position:absolute;top:10px;right:11px;border:1px solid var(--line);border-radius:7px;background:#ffffff08;color:#aaa;width:29px;height:29px}.modal .eyebrow{justify-content:center}.modal h2{margin:4px 0;font-size:22px}.modal p{margin:0 0 16px;color:#9998a5;font-size:10px}.wins{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin-bottom:17px}.win-item{--rarity:#888;position:relative;display:flex;flex-direction:column;align-items:center;padding:9px;border:1px solid var(--line);border-radius:8px;background:#111218;min-width:0}.win-item .item-art{width:95px;height:71px}.win-item b{font-size:8px;margin-top:7px;min-height:23px}.win-item span{color:var(--rarity);font-size:7px}.win-item strong{margin-top:4px;font-size:10px}.modal-actions{display:flex;justify-content:center;gap:8px}.secondary{border:1px solid #ffffff1b;border-radius:8px;background:#ffffff08;color:#ddd;padding:10px 12px;font-size:9px;font-weight:bold}
-    .page-title{display:flex;align-items:end;justify-content:space-between;margin:16px 0 20px}.page-title h1 span{color:#aa8aff}.help-text{color:#9998a5;font-size:9px}.upgrade-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px minmax(0,1fr);gap:12px}.upgrade-side{min-height:365px;padding:14px;border:1px solid var(--line);border-radius:11px;background:linear-gradient(145deg,#191a22,#14151b)}.side-head{display:flex;justify-content:space-between;color:#9998a4;font-size:8px;font-weight:bold}.side-head b{color:#ddd}.source-tabs{display:flex;gap:4px;margin:13px 0 10px;padding:3px;border-radius:7px;background:#101116}.source-tabs button{flex:1;padding:7px;border:0;border-radius:5px;background:transparent;color:#9695a2;font-size:8px}.source-tabs .selected{background:#8b5cf624;color:#e4dcff}.upgrade-items{display:flex;flex-direction:column;gap:5px;max-height:215px;overflow:auto}.source-item{display:flex;align-items:center;gap:7px;padding:5px;border:1px solid transparent;border-radius:6px;background:#101116;color:#bbb;font-size:8px;text-align:left}.source-item.selected{border-color:#9b76e97a;background:#8b5cf617}.source-item .item-art{width:34px;height:30px}.source-item .item-art b{font-size:17px}.source-item span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}.source-item strong{white-space:nowrap;font-size:8px}.empty{min-height:155px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:#858491;text-align:center;font-size:9px}.empty b{color:#ddd;font-size:10px}.selected-value{display:flex;justify-content:space-between;margin-top:10px;padding-top:9px;border-top:1px solid var(--line);color:#9998a4;font-size:8px}.selected-value b{color:#eee;font-size:10px}.stake-box{margin:28px 0 36px}.stake-box label,.target-select label{display:block;margin-bottom:5px;color:#9998a4;font-size:8px}.stake-box input[type=number]{width:100%;padding:9px;border:1px solid #ffffff19;border-radius:6px;background:#111218;color:#fff}.stake-box input[type=range]{width:100%;margin-top:12px;accent-color:#9c74f4}.stake-box small{display:block;color:#82818e;font-size:8px;margin-top:5px}.chance{position:relative;width:139px;height:139px;margin:35px auto 13px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(from -90deg,#9c6df1 var(--angle,0deg),#28232f var(--angle,0deg));box-shadow:0 0 22px #8b5cf622}.chance:before{content:"";position:absolute;inset:7px;border-radius:50%;background:#15151c}.chance>div{z-index:1;text-align:center}.chance small{display:block;color:#85828f;font-size:7px;font-weight:bold;letter-spacing:.7px}.chance b{font-size:27px}.chance i{color:#ad8aff;font-size:13px;font-style:normal}.chance-pointer{position:absolute;z-index:2;top:2px;left:calc(50% - 1px);width:3px;height:16px;border-radius:4px;background:#e3d4ff;transform-origin:50% 68px;box-shadow:0 0 10px #a778ff}.chance-pointer.spin{animation:spin 1s ease-out}@keyframes spin{to{transform:rotate(1080deg)}}.upgrade-arrows{text-align:center;color:#9c7bd7;margin:12px}.upgrade-button{display:block;margin:auto}.chance-hint{margin-top:8px;text-align:center;color:#85838f;font-size:8px}.target-preview{display:flex;flex-direction:column;align-items:center;margin:15px 0 12px;padding:10px;border:1px solid #ffffff0c;border-radius:8px;background:#111218}.target-preview .item-art{width:95px;height:77px}.target-preview>span:not(.item-art){margin-top:7px;color:var(--rarity);font-size:7px;font-weight:bold}.target-preview b{margin-top:4px;text-align:center;font-size:9px}.target-preview small{color:#888;font-size:8px;margin-top:3px}.target-preview strong{margin-top:6px;color:#eac16e;font-size:12px}.target-select select{width:100%;padding:7px;border:1px solid #ffffff18;border-radius:6px;background:#101116;color:#ccc;font-size:8px}.quick-targets{display:flex;gap:5px;margin-top:7px}.quick-targets button{flex:1;padding:7px 3px;border:1px solid #ffffff12;border-radius:5px;background:#111218;color:#c5b5e9;font-size:9px}.quick-targets button small{display:block;color:#999;font-size:7px}.quick-targets .selected{border-color:#9470e8;background:#8b5cf61c}
-    .contract-panel{display:grid;grid-template-columns:.85fr 1.15fr;min-height:350px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(110deg,#191720,#15161d);overflow:hidden}.contract-copy{padding:26px}.contract-icon{width:44px;height:44px;display:grid;place-items:center;margin-bottom:14px;border-radius:12px;background:#8b5cf61e;color:#b091ff;font-size:23px}.contract-copy h2{font-size:23px;line-height:1.2;margin:8px 0}.contract-copy h2 span{color:#ae8bff}.contract-copy p{max-width:300px;color:#92919e;font-size:9px;line-height:1.6}.contract-stat{display:flex;justify-content:space-between;max-width:320px;padding:9px 0;border-top:1px solid var(--line);color:#999;font-size:8px}.contract-stat b{color:#eee}.contract-slots{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:16px;border-left:1px solid var(--line);background:radial-gradient(ellipse at center,#8654d519,transparent 65%)}.slot,.result-slot{width:105px;height:135px;border:1px dashed #ffffff25;border-radius:8px;color:#858491;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}.slot.filled{border-style:solid;border-color:#9f7de03b;background:#18151f}.slot .item-art{width:67px;height:62px}.slot .item-art b{font-size:30px}.slot b{padding:0 5px;text-align:center;font-size:7px}.slot span{font-size:8px}.result-slot{border-color:#a880f74f;background:#8b5cf613;color:#ac8cf1}.result-slot b{font-size:32px}.notice{margin-top:10px;color:#c9b9ee;font-size:9px}
-    .bonus-hero{position:relative;overflow:hidden;min-height:270px;display:flex;align-items:center;gap:27px;padding:32px 38px;border:1px solid #8e68dc39;border-radius:14px;background:radial-gradient(ellipse at 18% 50%,#8d5be32b,transparent 34%),linear-gradient(110deg,#211b2e,#191720 60%,#15161d)}.gift-art{width:145px;height:145px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;color:#e6ceff;font-size:70px;background:radial-gradient(circle,#9a71e833,transparent 68%);filter:drop-shadow(0 0 20px #9a71e844)}.bonus-hero h2{margin:8px 0;font-size:25px}.bonus-hero h2 span{color:#b292ff}.bonus-hero p{color:#a09eac;font-size:9px;line-height:1.6}.bonus-amount{margin-left:auto;align-self:flex-start;color:#ebd080;font-size:18px;font-weight:bold}.bonus-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:13px}.bonus-card{padding:16px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(135deg,#191a22,#15161c)}.bonus-card .eyebrow{margin-bottom:5px}.bonus-card h3{margin:5px 0;font-size:13px}.bonus-card p{color:#8c8b98;font-size:8px;min-height:25px}.bonus-card button{border:0;background:none;padding:0;color:#b39af1;font-size:8px;font-weight:bold}
-    .profile-head{display:flex;align-items:center;justify-content:space-between;padding:15px 0 18px}.profile-user{display:flex;align-items:center;gap:13px}.profile-avatar{width:55px;height:55px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,#a57dfb,#4e337d);font-size:23px;font-weight:bold}.profile-head h1{margin:0;font-size:21px}.profile-head .eyebrow{margin:0 0 3px}.profile-sub{color:#888;font-size:8px}.profile-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}.profile-stat{display:grid;grid-template-columns:32px 1fr;grid-template-rows:auto auto;align-items:center;gap:4px 8px;padding:10px;border:1px solid var(--line);border-radius:9px;background:#171920}.profile-stat i{grid-row:span 2;width:31px;height:31px;display:grid;place-items:center;border-radius:8px;background:#8b5cf61c;color:#ad8bff;font-style:normal}.profile-stat small{color:#858491;font-size:6px;font-weight:bold;letter-spacing:.4px}.profile-stat b{font-size:12px}.profile-card{padding:15px 17px;border:1px solid var(--line);border-radius:10px;background:#171920;margin-bottom:25px}.profile-card h2{font-size:12px;margin:0}.nickname{display:flex;gap:7px;max-width:430px;margin-top:12px}.nickname input{flex:1;min-width:0;padding:8px 10px;border:1px solid #ffffff18;border-radius:6px;background:#111218;color:white;font-size:9px}.nickname button{border:1px solid #ffffff18;border-radius:6px;background:#ffffff08;color:#ddd;padding:8px 11px;font-size:8px}.inventory-toolbar{display:flex;align-items:center;justify-content:space-between;margin:10px 0}.filters{display:flex;gap:4px}.filters button{padding:6px 9px;border:1px solid transparent;border-radius:6px;background:none;color:#92919e;font-size:8px}.filters button.selected{border-color:#8b5cf64d;background:#8b5cf618;color:#c5b0ff}.sell-all{border:1px solid #10b98132;border-radius:7px;background:#10b98113;color:#8be1bd;padding:7px 10px;font-size:8px;font-weight:bold}.owned{min-height:205px}.owned .item-art{height:89px}.owned button{width:100%;margin-top:8px;padding:6px;border:1px solid #10b9812b;border-radius:6px;background:#10b98113;color:#67d7a9;font-size:8px;font-weight:bold}.empty-inventory{min-height:180px;border:1px dashed #ffffff18;border-radius:9px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:7px;color:#83828e;text-align:center;font-size:9px}.empty-inventory b{color:#ccc;font-size:11px}
-    .footer{max-width:1280px;margin:auto;min-height:55px;padding:12px 28px;border-top:1px solid var(--line);display:flex;align-items:center;gap:18px;color:#777784;font-size:8px}.footer strong{color:#9998a4;white-space:nowrap}.footer .disclaimer{display:flex;align-items:center;gap:5px}.footer button{margin-left:auto;border:0;background:none;color:#8c8b98;font-size:8px;white-space:nowrap}.toast{position:fixed;z-index:60;right:20px;bottom:20px;padding:11px 14px;border:1px solid #8b5cf64b;border-radius:8px;background:#201b2b;color:#eee;box-shadow:0 12px 35px #0008;font-size:10px;animation:fade .18s ease-out}.hidden{display:none!important}@keyframes pulse{50%{opacity:.4}}@keyframes turn{to{transform:rotate(360deg)}}@keyframes fade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
-    .auth-actions{display:flex;align-items:center;gap:6px}.auth-button{border:1px solid #ffffff20;border-radius:7px;background:#ffffff09;color:#ddd;padding:7px 8px;font-size:8px;font-weight:bold}.auth-actions button,.admin-button{border:1px solid #ffffff20;border-radius:7px;background:#ffffff09;color:#ddd;padding:8px 10px;font-size:9px;font-weight:bold}.auth-actions .register-button{border-color:#8b5cf660;background:#8b5cf620;color:#d4c5ff}.admin-button{border-color:#ef536b70;background:#ef536b20;color:#ff9da8}.auth-modal{width:min(410px,100%);text-align:left}.auth-modal h2{margin-bottom:14px}.auth-form{display:grid;gap:9px}.auth-form label,.field-label{display:grid;gap:5px;color:#a6a4b1;font-size:9px}.auth-form input,.admin-form input,.admin-form select,.admin-form textarea,.promo-entry input{min-width:0;padding:9px 10px;border:1px solid #ffffff1b;border-radius:7px;background:#101116;color:#f4f2f8}.auth-form .primary{margin-top:5px}.auth-switch{display:flex;justify-content:center;gap:5px;margin-top:12px;color:#90909d;font-size:9px}.auth-switch button{border:0;background:none;color:#b9a2ff;font-size:9px}.admin-main{max-width:1280px;margin:0 auto;padding:24px 28px 50px}.admin-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.admin-head h1{margin:0;font-size:25px}.admin-head p{margin:4px 0 0;color:#8f8e9b;font-size:9px}.admin-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;padding:6px;border:1px solid var(--line);border-radius:9px;background:#15161d}.admin-tabs button,.admin-button-small{border:1px solid transparent;border-radius:6px;background:transparent;color:#aaa9b6;padding:8px 10px;font-size:9px}.admin-tabs button.selected{background:#8b5cf622;color:#d6c6ff;border-color:#8b5cf644}.admin-panel{padding:14px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(140deg,#191a22,#14151b);margin-bottom:12px}.admin-panel h2{margin:0 0 11px;font-size:13px}.admin-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.admin-stat{padding:12px;border:1px solid var(--line);border-radius:8px;background:#111218}.admin-stat small{display:block;color:#8d8c99;font-size:8px}.admin-stat b{display:block;margin-top:5px;font-size:18px}.admin-table-wrap{overflow:auto}.admin-table{width:100%;border-collapse:collapse;min-width:680px;font-size:9px}.admin-table th,.admin-table td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}.admin-table th{color:#8f8e9b;font-size:8px}.admin-table input,.admin-table select{max-width:130px;padding:6px;border:1px solid #ffffff1b;border-radius:5px;background:#101116;color:#eee;font-size:8px}.admin-button-small{border:1px solid #ffffff20;background:#ffffff08;padding:6px 8px;white-space:nowrap}.admin-button-small.danger{border-color:#ef536b55;color:#ff8794}.admin-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.admin-form .wide{grid-column:1/-1}.admin-form input,.admin-form select,.admin-form textarea{width:100%;font-size:9px}.admin-form input[type=checkbox],.admin-form input[type=range]{width:auto}.admin-form textarea{min-height:145px;resize:vertical;font-family:Consolas,monospace;font-size:8px}.admin-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.admin-cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.admin-case{padding:10px;border:1px solid var(--line);border-radius:8px;background:#111218}.admin-case b{display:block;margin-bottom:4px;font-size:10px}.admin-case small{color:#999;font-size:8px}.promo-entry{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.promo-entry input{font-size:9px}.promo-entry input[type=number]{width:100px}.promo-entry input[type=text]{width:150px}.profile-card .promo-entry{margin-top:10px}.promo-entry button{border:1px solid #8b5cf655;border-radius:6px;background:#8b5cf620;color:#d7c8ff;padding:8px 10px;font-size:8px;font-weight:bold}.loading-screen{min-height:160px;display:grid;place-items:center;color:#aaa;font-size:10px}
-    @media(max-width:1020px){.topbar-inner{gap:20px;padding:0 20px}.wrap{padding-left:20px;padding-right:20px}.case-grid{gap:8px}.case-art{height:108px}.case-info{padding:8px}.upgrade-grid{grid-template-columns:minmax(0,1fr) 155px minmax(0,1fr);gap:8px}.upgrade-side{padding:10px}.slot,.result-slot{width:90px}}
-    @media(max-width:760px){.topbar{height:64px}.topbar-inner{padding:0 15px;gap:10px}.brand{font-size:16px}.nav{display:none;position:absolute;top:63px;left:0;right:0;height:auto;padding:9px 12px 12px;background:#111218f7;border-bottom:1px solid var(--line);flex-wrap:wrap}.nav.open{display:flex}.nav button{flex:1;justify-content:center}.menu-toggle{display:block}.top-actions{gap:8px}.demo-button{padding:8px;font-size:0}.demo-button strong{font-size:9px}.balance{font-size:10px}.avatar-button>span:last-child{display:none}.live{height:58px;gap:9px}.live-card{min-width:142px;max-width:142px}.arrow{display:none}.wrap{padding-left:15px;padding-right:15px}.hero{min-height:318px}.hero-copy{padding:28px 25px}.hero h1{font-size:34px}.hero-art{width:42%;right:0}.chest{transform:scale(.78)}.orbit{width:250px;height:250px}.orbit.inner{width:190px;height:190px}.coin.one{right:4%}.case-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.case-grid.single{grid-template-columns:1fr}.items-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.upgrade-grid{grid-template-columns:minmax(0,1fr) 140px minmax(0,1fr)}.profile-stats{grid-template-columns:repeat(2,1fr)}.profile-stat small{font-size:6px}.contract-slots{gap:5px}.slot,.result-slot{width:78px;height:115px}}
-    @media(max-width:540px){.topbar-inner{gap:6px}.brand{gap:6px;font-size:14px}.brand-mark{width:25px;height:25px}.top-actions{gap:6px}.top-actions .demo-button{width:30px;height:30px;padding:0;display:grid;place-items:center;font-size:0}.top-actions .demo-button strong{display:none}.balance:before{display:none}.avatar{width:28px;height:28px}.live{padding:0 13px}.live-label{font-size:8px}.wrap{padding:0 13px 38px}.hero{min-height:342px}.hero-copy{padding:24px 18px}.hero h1{font-size:29px}.hero p{max-width:260px;font-size:10px}.hero-art{width:100%;height:170px;top:auto;bottom:-14px;opacity:.7}.chest{transform:scale(.62)}.orbit{width:205px;height:205px}.orbit.inner{width:160px;height:160px}.coin.one{top:7px;right:13%}.coin.two{bottom:25px;left:12%}.sticker{right:9%;bottom:12px}.hero-stats{margin-top:15px;gap:13px}.stats{gap:5px;margin:10px 0 26px}.stat{padding:8px 6px;gap:5px;min-height:54px}.stat-icon{width:27px;height:27px;font-size:13px}.stat small{font-size:5px;letter-spacing:0}.stat b{font-size:10px}.stat b em{display:none}.section-head h2,.contents h2{font-size:17px}.section-head{margin-bottom:10px}.risk-panel{flex-wrap:wrap;padding:9px;gap:8px}.risk-icon{width:30px;height:30px}.risk-intro{gap:6px}.risk-intro b{font-size:9px}.risk-intro small{display:none}.risk-controls{margin-left:auto;gap:3px}.risk-controls button{min-width:39px;padding:5px 4px}.risk-controls button b{font-size:10px}.risk-controls button small{font-size:5px}.odds{display:none}.case-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.case-art{height:104px}.case-title{font-size:9px}.case-desc{font-size:7px}.case-info{padding:8px}.category{margin-top:25px}.link{font-size:8px}.opening-head{align-items:flex-start}.opening-head h1,.page-title h1{font-size:22px}.price-head{font-size:13px}.roulette{padding:10px 8px}.roulette-window{height:180px}.roulette-item{width:116px}.roulette-item .item-art{width:68px;height:65px}.roulette-controls{gap:6px;flex-wrap:wrap}.fast-toggle{order:2;margin-left:0}.open-button{margin-left:auto;padding:9px;font-size:8px;gap:5px}.quantity button{min-width:27px}.contents{padding-top:21px}.items-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.item-card{padding:7px}.item-art{height:76px}.item-name{font-size:8px}.modal{padding:26px 13px 15px}.modal-actions{flex-direction:column}.modal-actions button{width:100%}.wins{grid-template-columns:repeat(2,minmax(0,1fr));max-height:280px;overflow:auto}.page-title{align-items:flex-start;flex-direction:column;gap:8px}.upgrade-grid{grid-template-columns:1fr;gap:8px}.upgrade-side{min-height:0}.upgrade-items{max-height:170px}.chance{width:115px;height:115px;margin:10px auto}.chance-pointer{transform-origin:50% 56px}.contract-panel{grid-template-columns:1fr}.contract-copy{padding:19px}.contract-slots{border-left:0;border-top:1px solid var(--line);min-height:195px}.slot,.result-slot{width:min(24vw,88px);height:108px}.bonus-hero{min-height:270px;padding:22px 17px;align-items:flex-start;gap:10px}.gift-art{position:absolute;right:9px;top:13px;width:75px;height:75px;font-size:42px;opacity:.55}.bonus-hero h2{font-size:20px}.bonus-amount{position:absolute;right:15px;bottom:15px;font-size:14px}.bonus-grid{grid-template-columns:1fr;gap:7px}.bonus-card{padding:13px}.bonus-card p{min-height:0}.profile-head{align-items:flex-start;flex-direction:column;gap:12px}.profile-head h1{font-size:19px}.profile-avatar{width:48px;height:48px}.profile-add{font-size:8px}.profile-card{padding:12px}.profile-stats{gap:5px}.profile-stat{padding:7px;grid-template-columns:27px 1fr;gap:4px}.profile-stat i{width:26px;height:26px}.profile-stat b{font-size:10px}.inventory-toolbar{align-items:flex-start;flex-direction:column;gap:7px}.filters{width:100%;gap:2px}.filters button{flex:1;padding:6px 5px}.sell-all{font-size:7px;padding:6px}.owned{padding:7px;min-height:195px}.owned .item-art{height:82px}.footer{padding:12px 13px;flex-wrap:wrap;gap:8px}.footer .disclaimer{width:100%;order:3}.footer button{margin-left:auto}.toast{left:12px;right:12px;bottom:12px;text-align:center}}
-    .sound-toggle{display:flex;align-items:center;gap:6px;border:1px solid #ffffff1a;border-radius:7px;background:#ffffff08;color:#aaa9b6;padding:7px 9px;font-size:9px;font-weight:bold;white-space:nowrap}.sound-toggle[aria-pressed=true]{border-color:#8b5cf660;background:#8b5cf620;color:#dacbff}.sound-toggle span{font-size:14px}.roulette.rolling .roulette-track{animation:none!important}
-    .skin-svg{width:64px;height:64px;overflow:visible;color:var(--item);filter:drop-shadow(0 5px 13px color-mix(in srgb,var(--item) 45%,transparent));animation:skin-float 3.8s ease-in-out infinite}
-    .item-art .skin-svg{width:70px;height:70px}.roulette-item .skin-svg{width:65px;height:65px}.win-item .skin-svg{width:82px;height:72px}.source-item .skin-svg,.slot .skin-svg{width:34px;height:30px}.live-art .skin-svg{width:25px;height:25px;animation-duration:4.7s}
-    .item-card,.owned,.roulette-item,.win-item{isolation:isolate}.item-card:before,.owned:before,.roulette-item:before,.win-item:before{content:"";position:absolute;z-index:2;inset:0;pointer-events:none;background:linear-gradient(112deg,transparent 23%,#ffffff0d 44%,#ffffff24 50%,#ffffff08 56%,transparent 73%);transform:translateX(-130%);animation:card-shimmer 5.2s ease-in-out infinite}.item-card>* ,.owned>* ,.roulette-item>* ,.win-item>*{position:relative;z-index:1}
-    .item-card.immortal,.owned.immortal,.roulette-item.immortal,.win-item.immortal{box-shadow:inset 0 0 22px #f4ad3a12,0 0 18px #f4ad3a12}.item-card.arcana,.owned.arcana,.roulette-item.arcana,.win-item.arcana{box-shadow:inset 0 0 22px #f44b6814,0 0 18px #f44b6815}.item-card.legendary,.owned.legendary,.roulette-item.legendary,.win-item.legendary{box-shadow:inset 0 0 22px #b284ff12,0 0 15px #b284ff12}
-    .immortal .item-art:after,.arcana .item-art:after,.legendary .item-art:after{content:"✦";position:absolute;top:7px;right:9px;color:var(--item);font-size:9px;text-shadow:0 0 10px currentColor;animation:sparkle 1.8s ease-in-out infinite}.immortal{--rarity:#e9a648;--item:#f1b34f}.arcana{--rarity:#e95a70;--item:#ef6379}.legendary{--rarity:#bd89ff;--item:#c79bff}
-    .item-card .item-art,.owned .item-art,.target-preview .item-art,.slot .item-art,.win-item .item-art{animation:art-glow 3.8s ease-in-out infinite}
-    .win-modal{overflow:hidden}.win-modal>*{position:relative;z-index:1}.win-modal.epic:before{content:"";position:absolute;z-index:0;pointer-events:none;width:420px;height:420px;left:50%;top:34%;margin:-210px 0 0 -210px;background:repeating-conic-gradient(from 0deg,#ffdf8540 0deg 7deg,transparent 7deg 17deg);mask-image:radial-gradient(circle,#000 5%,transparent 68%);animation:light-rays 18s linear infinite}.win-modal.epic:after{content:"";position:absolute;z-index:0;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 40%,#ffcf6a21,transparent 55%);animation:win-flash 1.1s ease-out both}.win-modal .wins{perspective:700px}.win-modal .win-item{animation:win-pop .6s cubic-bezier(.15,.85,.25,1.3) both}.win-modal .win-item:nth-child(2){animation-delay:.08s}.win-modal .win-item:nth-child(3){animation-delay:.16s}.win-modal .win-item:nth-child(4){animation-delay:.24s}
-    .admin-skins-json{min-height:180px}.skin-list{max-height:420px;overflow:auto}.skin-table .item-art{width:45px;height:42px;padding:0}.skin-table .skin-svg{width:40px;height:40px}.admin-skins-hint{margin:8px 0;color:#9694a2;font-size:9px;line-height:1.6}.admin-skins-hint code{color:#d5c5ff}
-    @keyframes skin-float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-4px) rotate(1deg)}}@keyframes card-shimmer{0%,65%{transform:translateX(-130%)}88%,100%{transform:translateX(130%)}}@keyframes sparkle{0%,100%{opacity:.3;transform:scale(.7) rotate(0)}50%{opacity:1;transform:scale(1.3) rotate(35deg)}}@keyframes art-glow{0%,100%{filter:drop-shadow(0 5px 10px color-mix(in srgb,var(--item) 22%,transparent))}50%{filter:drop-shadow(0 5px 19px color-mix(in srgb,var(--item) 52%,transparent))}}@keyframes light-rays{to{transform:rotate(360deg)}}@keyframes win-flash{0%{opacity:1}100%{opacity:0}}@keyframes win-pop{0%{opacity:0;transform:translateY(15px) scale(.65) rotateY(25deg)}65%{opacity:1;transform:translateY(-3px) scale(1.06) rotateY(-5deg)}100%{opacity:1;transform:translateY(0) scale(1) rotateY(0)}}
-    @media(max-width:540px){.sound-toggle{width:30px;height:30px;justify-content:center;padding:0}.sound-toggle em{display:none}.admin-skins-hint{font-size:8px}}
-    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+    :root{--bg:#0A0F0D;--panel:#111916;--panel2:#17211d;--line:#ffffff12;--text:#f5f7f6;--muted:#8e9b95;--green:#10B981;--lime:#34D399;--gold:#F59E0B;--red:#ef5d67}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px;background:radial-gradient(circle at 78% -10%,#10b9811f,transparent 30%),var(--bg);color:var(--text);font:14px/1.45 Inter,Arial,sans-serif}button,input,select{font:inherit}button{cursor:pointer;color:inherit}button:disabled{opacity:.5;cursor:not-allowed}input,select{width:100%;border:1px solid var(--line);border-radius:9px;background:#0d1311;color:var(--text);padding:11px}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--lime);outline-offset:2px}.shell{min-height:100vh}.topbar{height:74px;position:sticky;top:0;z-index:30;border-bottom:1px solid var(--line);background:#0a0f0de8;backdrop-filter:blur(18px)}.inner{max-width:1280px;margin:auto;padding:0 28px}.topbar .inner{height:100%;display:flex;align-items:center;gap:28px}.brand{border:0;background:none;display:flex;align-items:center;gap:10px;font-size:20px;font-weight:900}.logo{position:relative;width:38px;height:38px;display:grid;place-items:center;border:1px solid #34d39955;border-radius:11px;background:linear-gradient(145deg,#16382e,#0d1613);color:var(--lime);box-shadow:0 0 25px #10b98122;font-size:22px}.logo:after{content:"";position:absolute;inset:5px;border:1px solid #f59e0b55;border-radius:7px}.nav{display:flex;gap:4px}.nav button{border:0;border-radius:8px;background:transparent;color:var(--muted);padding:9px 11px;font-weight:800}.nav button.active,.nav button:hover{background:#10b98116;color:white}.actions{margin-left:auto;display:flex;align-items:center;gap:9px}.deposit{border:0;border-radius:9px;background:linear-gradient(135deg,var(--lime),#059669);padding:10px 14px;font-weight:900;box-shadow:0 8px 24px #10b98124}.balance{border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-weight:900}.balance i{color:var(--lime);font-style:normal}.avatar{width:38px;height:38px;border:1px solid #ffffff18;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#1f3a31,#101713);font-weight:900}.mobile-menu{display:none}.livebar{height:58px;display:flex;align-items:center;gap:12px;overflow:hidden}.livebar strong{font-size:10px;color:var(--lime);letter-spacing:1px}.live-list{display:flex;gap:8px;flex:1;overflow:hidden}.live-card{min-width:180px;height:38px;display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px;background:#111916;padding:5px 8px}.live-card.big{border-color:#f59e0b66;box-shadow:0 0 18px #f59e0b12}.live-icon{width:28px;height:28px;border-radius:7px;display:grid;place-items:center;background:#10b98118;color:var(--lime)}.live-text{min-width:0;flex:1}.live-text b,.live-text span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.live-text b{font-size:9px}.live-text span{font-size:8px;color:var(--muted)}.live-value{font-size:9px;font-weight:900}.hero{position:relative;min-height:306px;overflow:hidden;border:1px solid #34d39922;border-radius:17px;background:radial-gradient(circle at 78% 58%,#10b98126,transparent 22%),linear-gradient(120deg,#18231f,#101713 65%,#172018);display:flex}.hero-copy{position:relative;z-index:2;padding:38px 42px}.tag{display:inline-flex;border:1px solid #34d39942;border-radius:20px;background:#10b98112;color:var(--lime);padding:6px 9px;font-size:9px;font-weight:900}.hero h1{font-size:42px;line-height:1.05;margin:16px 0 10px;letter-spacing:-1.8px}.hero h1 span{color:var(--lime)}.hero p{max-width:480px;color:#adb7b2}.primary{border:0;border-radius:9px;background:linear-gradient(135deg,var(--lime),#059669);padding:12px 16px;font-weight:900;box-shadow:0 10px 24px #10b98122}.secondary{border:1px solid var(--line);border-radius:9px;background:#ffffff08;padding:11px 13px;font-weight:800}.hero-art{position:absolute;right:5%;top:0;width:43%;height:100%;display:grid;place-items:center}.vault{position:relative;width:220px;height:220px;animation:float 4s ease-in-out infinite}.vault-door{position:absolute;inset:30px;border:9px solid #26352f;border-radius:48px;background:radial-gradient(circle,#1e3028 0 29%,#0d1512 30% 38%,#26352f 39% 42%,#111916 43%);box-shadow:0 30px 50px #0009,inset 0 0 25px #34d39912}.vault-door:before{content:"";position:absolute;width:56px;height:56px;left:50%;top:50%;transform:translate(-50%,-50%);border:7px solid #F59E0B;border-radius:50%;box-shadow:0 0 18px #f59e0b55}.vault-door:after{content:"";position:absolute;width:8px;height:52px;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:5px;background:linear-gradient(var(--gold),#fff0a2);}.cash-coin{position:absolute;width:46px;height:46px;border:2px solid #f6cb62;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#ffe89a,#b77909 70%);color:#604000;font-weight:900;box-shadow:0 10px 20px #0007}.cash-coin.c1{right:-10px;top:25px}.cash-coin.c2{left:-15px;bottom:28px}.main{padding-top:16px;padding-bottom:50px}.section-title{display:flex;align-items:end;justify-content:space-between;margin:28px 0 13px}.section-title h2{margin:0;font-size:21px}.section-title span{color:var(--muted);font-size:10px}.risk{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);border-radius:11px;background:linear-gradient(100deg,#17231f,#111916);padding:12px 14px;margin-bottom:12px}.risk-choice{display:flex;gap:6px}.risk-choice button{min-width:72px;border:1px solid var(--line);border-radius:8px;background:#0d1311;padding:8px}.risk-choice button.active{border-color:#34d39977;background:#10b98118}.case-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px}.case-card{--accent:var(--lime);position:relative;overflow:hidden;min-height:220px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(145deg,#18231f,#101612);text-align:left;padding:0;transition:.2s}.case-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 15px 32px #0005}.case-art{height:137px;position:relative;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 70%,color-mix(in srgb,var(--accent) 20%,transparent),transparent 58%)}.case-badge{position:absolute;z-index:2;top:9px;left:9px;border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:6px;background:#0a0f0dcc;color:var(--accent);padding:4px 7px;font-size:8px;font-weight:900}.case-visual{width:108px;height:86px;position:relative;filter:drop-shadow(0 14px 13px #0009);animation:float 3.2s ease-in-out infinite}.briefcase{position:absolute;left:8px;bottom:3px;width:92px;height:68px;border:3px solid #d7b75a;border-radius:10px;background:linear-gradient(135deg,#405448,#1a2822);box-shadow:inset 0 0 0 5px #111916}.briefcase:before{content:"";position:absolute;width:42px;height:20px;left:22px;top:-18px;border:4px solid #d7b75a;border-bottom:0;border-radius:8px 8px 0 0}.briefcase:after{content:"$";position:absolute;width:34px;height:34px;left:26px;top:17px;border:2px solid #f6cb62;border-radius:50%;display:grid;place-items:center;background:#20382f;color:#f6cb62;font-weight:900}.case-info{padding:11px}.case-info b{display:block;font-size:12px}.case-info small{display:block;height:18px;color:var(--muted);font-size:9px}.case-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:8px}.case-price{color:white;font-size:13px;font-weight:900}.case-go{width:27px;height:27px;border:0;border-radius:7px;background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)}.green{--accent:#10B981}.lime{--accent:#34D399}.gold{--accent:#F59E0B}.blue{--accent:#60a5fa}.red{--accent:#ef5d67}.back{border:0;background:none;color:var(--muted);padding:5px 0}.opening-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:13px}.opening-head h1{margin:0}.opening-head p{margin:4px 0 0;color:var(--muted)}.roulette{overflow:hidden;border:1px solid var(--line);border-radius:13px;background:linear-gradient(145deg,#17211d,#101511);padding:14px}.roulette-window{height:210px;position:relative;overflow:hidden;border:1px solid #ffffff0d;border-radius:9px;background:#0c110f}.pointer{position:absolute;z-index:5;left:50%;top:0;bottom:0;width:2px;background:var(--lime);box-shadow:0 0 16px var(--lime)}.roulette-track{height:100%;display:flex;gap:8px;width:max-content;align-items:center;padding:8px}.money-card{width:138px;height:188px;flex:0 0 auto;border:1px solid var(--line);border-radius:9px;background:linear-gradient(145deg,#1a2923,#111815);display:flex;flex-direction:column;align-items:center;justify-content:center}.money-card.big{border-color:#f59e0b88}.money-svg{width:105px;height:105px}.money-name{margin-top:5px;font-size:9px;color:#cbd5d0}.money-value{font-size:12px;font-weight:900;color:var(--lime)}.roulette-controls{display:flex;align-items:center;gap:10px;margin-top:10px}.quantity{display:flex;gap:5px}.quantity button{width:34px;border:1px solid var(--line);border-radius:7px;background:#151d19;padding:7px}.quantity button.active{border-color:var(--lime);color:var(--lime)}.open-button{margin-left:auto}.wins{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px}.win-card{border:1px solid var(--line);border-radius:10px;background:#101613;padding:10px;text-align:center}.win-card strong{display:block;margin-top:6px}.panel{border:1px solid var(--line);border-radius:12px;background:linear-gradient(145deg,#17211d,#111612);padding:16px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{margin-bottom:10px}.field label{display:block;margin-bottom:5px;color:var(--muted);font-size:10px;font-weight:800}.methods{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.method{border:1px solid var(--line);border-radius:9px;background:#0d1311;padding:11px;text-align:left}.method.active{border-color:var(--lime);background:#10b98112}.method b{display:block}.method span{color:var(--muted);font-size:9px}.amounts{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:8px 0}.amounts button{border:1px solid var(--line);border-radius8px;background:#0d1311;padding:9px}.amounts button.active{border-color:var(--lime);color:var(--lime)}.modal-bg{position:fixed;z-index:60;inset:0;display:grid;place-items:center;padding:16px;background:#050807dd;backdrop-filter:blur(8px)}.modal{position:relative;width:min(680px,100%);max-height:90vh;overflow:auto;border:1px solid #34d39938;border-radius:15px;background:radial-gradient(circle at 50% 0,#10b98120,transparent 35%),#111916;padding:22px}.modal h2{margin:4px 0}.modal p{color:var(--muted)}.modal-x{position:absolute;right:12px;top:12px;width:32px;height:32px;border:1px solid var(--line);border-radius:8px;background:#ffffff08}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.table{width:100%;border-collapse:collapse}.table th,.table td{border-bottom:1px solid var(--line);padding:9px;text-align:left;font-size:10px}.table th{color:var(--muted)}.status{display:inline-flex;border-radius:20px;padding:4px 7px;font-size:8px;font-weight:900}.status.pending{background:#f59e0b18;color:#fbbf24}.status.completed,.status.approved{background:#10b98118;color:#34d399}.status.rejected,.status.refunded{background:#ef5d6718;color:#fb7185}.inventory{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.inventory-card{border:1px solid var(--line);border-radius:10px;background:#121915;padding:9px}.inventory-card b{display:block;font-size:10px}.inventory-card span{display:block;color:var(--lime);font-weight:900}.tabs{display:flex;gap:6px;margin-bottom:12px}.tabs button{border:1px solid var(--line);border-radius8px;background:#0d1311;padding8px 10px}.tabs button.active{border-color:var(--lime);background:#10b98116}.toast{position:fixed;z-index:100;right:20px;bottom:20px;border:1px solid #34d39955;border-radius10px;background:#111916;padding12px 15px;box-shadow:0 15px 40px #000;max-width:340px}.auth-form{max-width:420px;margin:auto}.auth-form button{width:100%;margin-top:8px}.footer{border-top:1px solid var(--line);color:var(--muted);padding:18px 0;font-size:9px;text-align:center}.float{animation:float 3.5s ease-in-out infinite}@keyframes float{50%{transform:translateY(-8px)}}@keyframes pulse{50%{opacity:.45}}.mobile-only{display:none}
+    @media(max-width:900px){.nav{display:none}.nav.open{display:flex;position:absolute;left:18px;right:18px;top:66px;border:1px solid var(--line);border-radius10px;background:#111916;padding8px}.nav.open button{flex:1}.mobile-menu{display:block}.topbar .inner{gap:10px}.brand{font-size0}.brand-name{display:none}.case-grid{grid-template-columns:repeat(2,1fr)}.inventory{grid-template-columns:repeat(2,1fr)}.hero-art{opacity:.45;width:55%}.hero-copy{padding:28px}.hero h1{font-size34px}.methods{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.risk{align-items:flex-start}.risk-choice{flex-wrap:wrap}.actions .avatar,.actions .balance{display:none}.mobile-only{display:inline}}
+    @media(max-width:520px){.inner{padding:0 14px}.hero h1{font-size29px}.hero-art{display:none}.case-grid{grid-template-columns:1fr 1fr}.case-art{height115px}.amounts{grid-template-columns:1fr 1fr}.table{display:block;overflow-x:auto}.live-card{min-width:150px}}
+    .amounts button,.tabs button,.toast{border-radius:8px}.tabs button{padding:8px 10px}.toast{border-radius:10px;padding:12px 15px}
   </style>
 </head>
 <body>
   <div id="app"></div>
   <script>
-  (function () {
-    "use strict";
     var SUPABASE_URL="https://xdgtekgccftmvsjslcdh.supabase.co";
     var SUPABASE_ANON_KEY="sb_publishable_KH2vlcyv9pdYgEq-wb9L0g_Ge3iw751";
     var db=window.supabase&&window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-    var ITEMS = [
-      {id:"mace",name:"Wraith Band",hero:"Phantom Assassin",price:10,rarity:"common",icon:"◈"},
-      {id:"boots",name:"Belt of the Deep",hero:"Slardar",price:12,rarity:"common",icon:"◆"},
-      {id:"blade",name:"Genuine Blade of Tears",hero:"Terrorblade",price:18,rarity:"uncommon",icon:"⚔"},
-      {id:"ward",name:"Eyes of the Lost",hero:"Night Stalker",price:24,rarity:"uncommon",icon:"◉"},
-      {id:"crown",name:"Crown of the Wyrm",hero:"Dragon Knight",price:32,rarity:"rare",icon:"♛"},
-      {id:"dagger",name:"Dagger of the Damned",hero:"Queen of Pain",price:46,rarity:"rare",icon:"⌁"},
-      {id:"staff",name:"Staff of the Demonic Vessel",hero:"Warlock",price:64,rarity:"rare",icon:"ϟ"},
-      {id:"mask",name:"Mask of the Confidant",hero:"Phantom Assassin",price:85,rarity:"mythical",icon:"◐"},
-      {id:"sword",name:"The Hallmark of the Hidden",hero:"Juggernaut",price:110,rarity:"mythical",icon:"⚔"},
-      {id:"wings",name:"Fluttering Mortis",hero:"Death Prophet",price:145,rarity:"mythical",icon:"✦"},
-      {id:"spear",name:"Spear of the Daemonfell Flame",hero:"Terrorblade",price:190,rarity:"mythical",icon:"➶"},
-      {id:"hook",name:"Genuine Dragonclaw Hook",hero:"Pudge",price:520,rarity:"immortal",icon:"⚓"},
-      {id:"rapier",name:"Demon Eater",hero:"Shadow Fiend",price:2300,rarity:"arcana",icon:"☠"},
-      {id:"shard",name:"Golden Ornithomancer Mantle",hero:"Rubick",price:840,rarity:"immortal",icon:"✧"},
-      {id:"dragon",name:"Great Sage's Reckoning",hero:"Monkey King",price:3400,rarity:"arcana",icon:"♜"},
-      {id:"pa-arcana",name:"Manifold Paradox",hero:"Phantom Assassin",price:2200,rarity:"arcana",icon:"✦"},
-      {id:"jugg-arcana",name:"Bladeform Legacy",hero:"Juggernaut",price:2450,rarity:"arcana",icon:"☯"},
-      {id:"pudge-arcana",name:"Feast of Abscession",hero:"Pudge",price:2100,rarity:"arcana",icon:"☠"},
-      {id:"rubick-arcana",name:"The Magus Cypher",hero:"Rubick",price:2800,rarity:"arcana",icon:"✺"},
-      {id:"terror-arcana",name:"Fractal Horns of Inner Abysm",hero:"Terrorblade",price:3200,rarity:"arcana",icon:"♨"},
-      {id:"lina-arcana",name:"Fiery Soul of the Slayer",hero:"Lina",price:1750,rarity:"arcana",icon:"♨"},
-      {id:"wr-arcana",name:"Compass of the Rising Gale",hero:"Windranger",price:1950,rarity:"arcana",icon:"➶"},
-      {id:"zeus-arcana",name:"Tempest Helm of the Thundergod",hero:"Zeus",price:1600,rarity:"arcana",icon:"ϟ"},
-      {id:"sf-arcana",name:"The Abscesserator",hero:"Pudge",price:1900,rarity:"immortal",icon:"☠"},
-      {id:"spectre-arcana",name:"Transversant Soul",hero:"Spectre",price:2550,rarity:"arcana",icon:"◈"},
-      {id:"pa-gold",name:"Genuine Golden Mantle of the Whispered Bond",hero:"Phantom Assassin",price:7800,rarity:"immortal",icon:"♛"},
-      {id:"crownfall",name:"Golden Latticean Shards",hero:"Enchantress",price:9700,rarity:"immortal",icon:"❄"},
-      {id:"exalted",name:"Exalted Feast of Abscession",hero:"Pudge",price:14900,rarity:"arcana",icon:"☠"}
-    ];
-    var EXTRA_ITEMS_DATA = [
-      "cm-arcana|Frost Avalanche|Crystal Maiden|4200|arcana|❄",
-      "es-arcana|Planetfall|Earthshaker|4500|arcana|✦",
-      "ogre-arcana|Flockheart's Gamble|Ogre Magi|3600|arcana|♟",
-      "qop-arcana|Eminence of Ristul|Queen of Pain|2900|arcana|♛",
-      "io-arcana|Benevolent Companion|Io|50000|arcana|✧",
-      "drow-arcana|Dread Retribution|Drow Ranger|3300|arcana|➶",
-      "void-arcana|Claszian Apostasy|Faceless Void|3900|arcana|◈",
-      "techies-arcana|Swine of the Sunken Galley|Techies|2700|arcana|♜",
-      "lc-arcana|Blades of Voth Domosh|Legion Commander|3100|arcana|⚔",
-      "wk-arcana|The One True King|Wraith King|3500|arcana|♛",
-      "mace-aeons|Mace of Aeons|Faceless Void|45000|immortal|⚒",
-      "dark-artistry-cape|Dark Artistry Cape|Invoker|22000|immortal|◈",
-      "golden-basher-blades|Golden Basher Blades|Anti-Mage|18000|immortal|⚔",
-      "vigil-triumph|Vigil Triumph|Sven|1800|immortal|✦",
-      "soul-diffuser|Inscribed Soul Diffuser|Spectre|2200|immortal|◉",
-      "insatiable-bonesaw|Insatiable Bonesaw|Pudge|2400|immortal|⚒",
-      "sullen-harvest|Sullen Harvest|Necrophos|950|immortal|☠",
-      "golden-staff-gun-yu|Golden Staff of Gun-Yu|Monkey King|3400|immortal|ϟ",
-      "golden-moonfall|Golden Moonfall|Phantom Assassin|2600|immortal|☽",
-      "golden-grasping-bludgeon|Golden Grasping Bludgeon|Ogre Magi|1900|immortal|♜",
-      "golden-infernal-chieftain|Golden Infernal Chieftain|Axe|1400|immortal|♛",
-      "golden-wyrmwrought-flare|Golden Wyrmwrought Flare|Jakiro|1250|immortal|♨",
-      "golden-full-bore-bonanza|Golden Full-Bore Bonanza|Timbersaw|1650|immortal|⚙",
-      "crimson-witness-hook|Crimson Witness Dragonclaw Hook|Pudge|50000|immortal|⚓",
-      "crimson-witness-blades|Crimson Witness Golden Basher Blades|Anti-Mage|50000|immortal|⚔",
-      "genuine-kantusa|Genuine Kantusa the Script Sword|Juggernaut|4200|legendary|⚔",
-      "golden-silent-wake|Golden Silent Wake|Drow Ranger|5600|immortal|➶",
-      "golden-rippers-reel|Golden Ripper's Reel|Tidehunter|3900|immortal|⚓",
-      "golden-piscean-pulverizer|Golden Piscean Pulverizer|Tidehunter|3100|immortal|⚒",
-      "golden-ice-blossom|Golden Ice Blossom|Crystal Maiden|2800|immortal|❄",
-      "dread-requisition|The Dread Requisition|Clinkz|2100|immortal|➶",
-      "peregrine-flight|Peregrine Flight|Mirana|1450|mythical|➶",
-      "screeauks-talon|Scree'auk's Talon|Vengeful Spirit|1600|immortal|✦",
-      "genuine-sky-piercer|Genuine Sky-Piercer|Skywrath Mage|1800|immortal|➶",
-      "genuine-lycosidaes-favor|Genuine Lycosidae's Favor|Broodmother|2100|immortal|◉",
-      "armor-fearful-aria|Armor of the Fearful Aria|Drow Ranger|1250|mythical|♜",
-      "bloodfeather-wings|Bloodfeather Wings|Queen of Pain|1750|immortal|➶",
-      "bracers-cavern-luminar|Bracers of the Cavern Luminar|Techies|1100|immortal|⚙",
-      "genuine-molten-claw|Genuine Molten Claw|Earthshaker|3700|immortal|⚒",
-      "nothlic-burden|Nothlic Burden|Necrophos|240|rare|☠",
-      "the-glaive-of-oscilla|The Glaive of Oscilla|Dark Seer|540|rare|✦",
-      "piston-impaler|Piston Impaler|Tinker|1800|immortal|⚙",
-      "genuine-winterblight|Genuine Winterblight|Winter Wyvern|2800|immortal|❄",
-      "iceflight-edifice|Iceflight Edifice|Ancient Apparition|700|mythical|❄",
-      "flooded-rancor|Flooded Rancor|Tidehunter|330|rare|⚓",
-      "the-barren-crown|The Barren Crown|Lina|180|uncommon|♛",
-      "mark-of-the-blood-moon|Mark of the Blood Moon|Luna|650|mythical|☽",
-      "genuine-skittering-desolation|Genuine Skittering Desolation|Broodmother|1900|immortal|◉",
-      "genuine-severing-crest|Genuine Severing Crest|Mars|1500|immortal|⚔",
-      "righteous-thunderbolt|Righteous Thunderbolt|Zeus|780|mythical|ϟ",
-      "genuine-staff-of-perplex|Genuine Staff of Perplex|Rubick|990|mythical|ϟ",
-      "genuine-censer-of-gliss|Genuine Censer of Gliss|Oracle|520|rare|✧",
-      "genuine-shards-of-exile|Genuine Shards of Exile|Outworld Destroyer|460|rare|◈",
-      "cursed-blackstaff|Cursed Blackstaff|Shadow Shaman|290|uncommon|ϟ",
-      "serrakura|Serrakura|Juggernaut|600|rare|⚔",
-      "bloodfeather-feast|Bloodfeather Feast|Queen of Pain|900|mythical|➶",
-      "iceborn-trinity|Genuine Iceborn Trinity|Winter Wyvern|2150|immortal|❄",
-      "sullen-regime|Sullen Regime|Necrophos|750|mythical|☠",
-      "genuine-wyrm|Genuine Wyrm|Dragon Knight|340|rare|♜",
-      "genuine-night-terrors|Genuine Night Terrors|Night Stalker|430|rare|◉",
-      "genuine-splitter-veil|Genuine Splitter of the Veil|Faceless Void|890|mythical|◈",
-      "genuine-bloodfeather|Genuine Bloodfeather|Queen of Pain|360|rare|➶",
-      "genuine-cloudbreaker|Genuine Cloudbreaker|Skywrath Mage|240|uncommon|✦",
-      "genuine-bladeform-pact|Genuine Bladeform Legacy|Juggernaut|1250|legendary|☯",
-      "genuine-arcane-meister|Genuine Arcane Meister|Invoker|75|common|ϟ",
-      "genuine-shadow-masquerade|Genuine Shadow Masquerade|Phantom Assassin|120|uncommon|◐",
-      "genuine-snowlore|Genuine Snowlore|Crystal Maiden|55|common|❄"
-    ];
-    ITEMS = ITEMS.concat(EXTRA_ITEMS_DATA.map(function(row){
-      var fields=row.split("|");
-      return {id:fields[0],name:fields[1],hero:fields[2],price:Number(fields[3]),rarity:fields[4],icon:fields[5]};
-    }));
-    var CASES = [
-      {id:"deal",name:"Выгодная сделка",price:15,badge:"ХИТ",icon:"♜",theme:"mint",desc:"Небольшой риск — приятный профит",items:["mace","boots","blade","ward","crown","dagger","staff"]},
-      {id:"black",name:"Чёрный рынок",price:49,badge:"ХИТ ПРОДАЖ",icon:"♟",theme:"violet",desc:"Тёмные сделки, яркие дропы",items:["blade","ward","crown","dagger","staff","mask","sword","hook"]},
-      {id:"bulk",name:"Оптовая закупка",price:99,badge:"x1–x4",icon:"▰",theme:"blue",desc:"Больше открытий — больше эмоций",items:["ward","crown","dagger","staff","mask","sword","wings","spear"]},
-      {id:"triple",name:"Тройная выгода",price:149,badge:"x1–x4",icon:"♜",theme:"orange",desc:"Три шанса изменить игру",items:["crown","dagger","staff","mask","sword","wings","spear","hook"]},
-      {id:"secret",name:"Тайный груз",price:299,badge:"RARE",icon:"◈",theme:"pink",desc:"Только для тех, кто готов рискнуть",items:["staff","mask","sword","wings","spear","hook","rapier","shard"]},
-      {id:"arcana",name:"Arcana hunter",price:599,badge:"ARCANA",icon:"✦",theme:"gold-case",desc:"Охота за легендарной Arcana",items:["hook","rapier","shard","dragon","pa-arcana","jugg-arcana","pudge-arcana","rubick-arcana"]},
-      {id:"immortal",name:"Immortal treasure",price:1299,badge:"IMMORTAL",icon:"♛",theme:"red-case",desc:"Сокровища достойные бессмертных",items:["rapier","shard","dragon","pa-arcana","jugg-arcana","rubick-arcana","pa-gold","crownfall"]},
-      {id:"premium",name:"The Crownfall",price:2499,badge:"TOP DROP",icon:"♛",theme:"purple",desc:"Роскошь, которую не забывают",items:["hook","dragon","pa-arcana","pudge-arcana","terror-arcana","pa-gold","crownfall","exalted"]},
-      {id:"all-arcana",name:"Все Арканы",price:3999,badge:"ALL ARCANA",icon:"✦",theme:"gold-case",desc:"Коллекция легендарных образов Dota 2",items:["pa-arcana","jugg-arcana","pudge-arcana","rubick-arcana","rapier","dragon","lina-arcana","wr-arcana","zeus-arcana","terror-arcana","cm-arcana","es-arcana","ogre-arcana","qop-arcana","io-arcana","drow-arcana","void-arcana","techies-arcana","lc-arcana","wk-arcana","spectre-arcana","exalted"]},
-      {id:"pudge-cache",name:"Сокровищница Pudge",price:999,badge:"HOOKS & HORRORS",icon:"⚓",theme:"red-case",desc:"Хуки и легендарные трофеи мясника",items:["hook","pudge-arcana","exalted","sf-arcana","insatiable-bonesaw","crimson-witness-hook","mask","staff"]},
-      {id:"budget-start",name:"Бюджетный старт",price:39,badge:"LOW COST",icon:"▰",theme:"mint",desc:"Редкие находки по доступной цене",items:["mace","boots","blade","ward","crown","dagger","staff","nothlic-burden","the-glaive-of-oscilla","flooded-rancor","the-barren-crown","cursed-blackstaff","serrakura","genuine-cloudbreaker","genuine-snowlore"]}
-    ];
-    var RISK_PRICES = {L:49,M:99,H:199,E:399};
-    var RARITY_LABEL = {common:"Обычный",uncommon:"Необычный",rare:"Редкий",mythical:"Мифический",legendary:"Легендарный",immortal:"Immortal",arcana:"Arcana"};
-    var NAMES = ["ShadowFiend","luna.exe","dark_willow","mid_or_feed","InvokerEnjoyer","neon_ghost"];
-    var state = {
-      balance:1000,inventory:[],nickname:"Player",opened:0,bestDrop:0,profit:0,
-      page:"cases",caseId:null,risk:"M",quantity:1,fast:false,rolling:false,winnings:null,reel:[],
-      rouletteOffset:0,audioContext:null,soundOn:false,
-      upgradeMode:"item",sourceUid:null,targetId:"hook",stake:100,contractNotice:"",filter:"Все предметы",
-      live:[],toastTimer:null,session:null,user:null,dbCases:[],dbSkins:ITEMS.slice(),
-      settings:{banner_title:"Твой следующий дроп уже близко.",live_drop_speed:5},
-      authDialog:null,adminTab:"dashboard",adminData:{},adminCase:null,winningIds:[],promoCode:""
-    };
-    var root = document.getElementById("app");
+    var state={page:"cases",user:null,session:null,role:"user",balance:0,inventory:[],profile:null,live:[],cases:[],items:[],moneydropSchema:false,settings:{rtp_multiplier:1,streamer_mode:false,demo_deposit:true,card_requisite:"",sbp_requisite:"",usdt_requisite:""},caseId:null,risk:"M",quantity:1,rolling:false,winnings:null,winningsIds:[],modal:null,cashTab:"deposit",cashStep:"method",method:"sbp",amount:500,promo:"",withdrawMethod:"sbp",withdrawAddress:"",withdrawAmount:500,adminTab:"dashboard",adminData:{},audio:null,sound:true,toast:""};
+    var root=document.getElementById("app");
 
-    function escapeHtml(value) {
-      return String(value).replace(/[&<>"']/g,function (char) {
-        return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char];
-      });
+    function money(v){return Math.round(Number(v)||0).toLocaleString("ru-RU")+" ₽";}
+    function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+    function rpc(name,args){if(!db)return Promise.reject(new Error("Supabase JS не загрузился"));return db.rpc(name,args||{}).then(function(r){if(r.error)throw new Error(r.error.message||"Ошибка Supabase");return r.data;});}
+    function toast(v){state.toast=v;render();clearTimeout(window._toast);window._toast=setTimeout(function(){state.toast="";render();},2600);}
+    function art(kind,value,klass){
+      var safe=esc(value||"$"),lower=(kind+" "+value).toLower();
+      var fg=/#34D399/i.test(lower)?"#34d399":"#f4d783";
+      if(/card|карт/.test(lower))return '<svg class="money-svg '+(klass||"")+'" viewBox="0 0 120 86"><defs><linearGradient id="cardgrad" x2="1" y2="1"><stop stop-color="#2d5e4f"/><stop offset="1" stop-color="#0b1511"/></linearGradient></defs><rect x="8" y="10" rx="12" width="104" height="66" fill="url(#cardgrad)" stroke="#f59e0b" stroke-opacity=".8"/><circle cx="34" cy="43" r="14" fill="#f59e0b" fill-opacity=".18" stroke="#f5cb63"/><text x="34" y="49" text-anchor="middle" fill="#f5cb63" font-size="16" font-weight="900">$</text><rect x="73" y="23" width="24" height="5" rx="3" fill="#34d399"/><rect x="73" y="34" width="30" height="3" rx="2" fill="#fff" opacity=".25"/></svg>';
+      if(/ingot|слит/.test(lower))return '<svg class="money-svg '+(klass||"")+'" viewBox="0 0 120 86"><defs><linearGradient id="gold" x2="1" y2="1"><stop stop-color="#fff2a6"/><stop offset=".45" stop-color="#f59e0b"/><stop offset="1" stop-color="#9a5b09"/></linearGradient></defs><path d="M18 68 31 29h58l13 39Z" fill="url(#gold)" stroke="#ffe58a"/><path d="M31 29 43 17h35l11 12Z" fill="#ffd969" stroke="#fff0a3"/><path d="M31 29h58M18 68h84" stroke="#fff" stroke-opacity=".55"/><text x="60" y="60" text-anchor="middle" fill="#fff0a3" font-size="13" font-weight="900">'+safe+'</text></svg>';
+      if(/cash|пач|налич/.test(lower)||!/card|slit/.test(lower))return '<svg class="money-svg '+(klass||"")+'" viewBox="0 0 120 86"><defs><linearGradient id="cash" x2="1" y2="1"><stop stop-color="#80efb3"/><stop offset="1" stop-color="#16684e"/></linearGradient></defs><g transform="rotate(-4 60 43)"><rect x="12" y="20" rx="5" width="96" height="48" fill="url(#cash)" stroke="#d7ffe9"/><rect x="20" y="28" width="80" height="32" rx="3" fill="#174f3d" stroke="#91dfbc"/><circle cx="60" cy="44" r="13" fill="#34d399"/><text x="60" y="50" text-anchor="middle" fill="#082019" font-size="17" font-weight="900">'+safe+'</text><path d="M27 36v16M93 36v16" stroke="#d7ffe9" stroke-width="3"/></g></svg>';
+      return '<svg class="money-svg" viewBox="0 0 120 86"><circle cx="60" cy="43" r="34" fill="#f59e0b" stroke="#ffe49a" stroke-width="4"/><circle cx="60" cy="43" r="26" fill="#a66a10" opacity=".55"/><text x="60" y="51" text-anchor="middle" fill="#fff4bd" font-size="18" font-weight="900">'+safe+'</text></svg>';
     }
-    function money(value) { return Math.round(Number(value)||0).toLocaleString("ru-RU")+" ₽"; }
-    function getItem(id) {
-      for (var i=0;i<ITEMS.length;i++) if (ITEMS[i].id===id) return ITEMS[i];
-      return ITEMS[0];
+    function defaultCases(){
+      return [
+        {id:"coin10",name:"Монета 10 ₽",price:10,category:"fast",badge:"START",theme:"lime",description:"Самый доступный денежный старт"},
+        {id:"starter25",name:"Стартер 25 ₽",price:25,category:"fast",badge:"x2",theme:"lime",description:"Монеты и купюры до 250 ₽"},
+        {id:"starter99",name:"Быстрый старт 99 ₽",price:99,category:"fast",badge:"FAST",theme:"green",description:"Купюры и карты малого номинала"},
+        {id:"quick",name:"Быстрый старт",price:50,category:"fast",badge:"x2–x5",theme:"lime",description:"Быстрый депозитный кэшбэк"},
+        {id:"bank299",name:"Сейф 299 ₽",price:299,category:"bank",badge:"SAFE",theme:"green",description:"Пачки по 500 и 1 000 ₽"},
+        {id:"bank499",name:"Сейф 499 ₽",price:499,category:"bank",badge:"BANK",theme:"blue",description:"Баланс из банкнот и карт"},
+        {id:"bank199",name:"Банковский сейф 199",price:199,category:"bank",badge:"КОШЕЛЁК",theme:"green",description:"Пачки купюр и карты"},
+        {id:"bank999",name:"Банковский сейф 999",price:999,category:"bank",badge:"PREMIUM",theme:"gold",description:"Крупные банковские номиналы"},
+        {id:"safe2499",name:"Сейф Deluxe 2 499 ₽",price:2499,category:"bank",badge:"DELUXE",theme:"gold",description:"Карты и золотые слитки"},
+        {id:"vip2500",name:"VIP Миллионер",price:2500,category:"vip",badge:"VIP",theme:"gold",description:"Золото и чемоданы с кэшем"},
+        {id:"vip5000",name:"VIP Black 5 000 ₽",price:5000,category:"vip",badge:"BLACK",theme:"gold",description:"Премиальные слитки и карты"},
+        {id:"vip10000",name:"Black VIP 10K",price:10000,category:"vip",badge:"JACKPOT",theme:"red",description:"Слитки и джекпот 250 000 ₽"},
+        {id:"vip25000",name:"Royal Vault 25 000 ₽",price:25000,category:"vip",badge:"ROYAL",theme:"red",description:"Чемоданы и высокие номиналы"},
+        {id:"millionaire",name:"Миллионер 50 000 ₽",price:50000,category:"vip",badge:"MILLION",theme:"red",description:"Призы до 250 000 ₽"},
+        {id:"risk",name:"Риск-кейс",price:50,category:"risk",badge:"RISK",theme:"red",description:"Low / Medium / High / Extreme"}
+      ];
     }
-    function rpc(name,params) {
-      if(!db)return Promise.reject(new Error("Не удалось загрузить Supabase JS с CDN."));
-      return db.rpc(name,params||{}).then(function(result){
-        if(result.error)throw new Error(result.error.message||"Ошибка Supabase");
-        return result.data;
-      });
+    function defaultItems(){
+      return [
+        {id:"coin10",name:"Монета 10 ₽",value:10,kind:"coin",rarity:"common"},{id:"coin50",name:"Монета 50 ₽",value:50,kind:"coin",rarity:"common"},
+        {id:"cash100",name:"Пачка 100 ₽",value:100,kind:"cash",rarity:"uncommon"},{id:"cash250",name:"Пачка 250 ₽",value:250,kind:"cash",rarity:"uncommon"},
+        {id:"cash500",name:"Наличная пачка 500 ₽",value:500,kind:"cash",rarity:"rare"},{id:"cash1000",name:"Банковская пачка 1 000 ₽",value:1000,kind:"cash",rarity:"rare"},
+        {id:"card5000",name:"Gold Card 5 000 ₽",value:5000,kind:"card",rarity:"immortal"},{id:"card10000",name:"Black Card 10 000 ₽",value:10000,kind:"card",rarity:"immortal"},
+        {id:"ingot25000",name:"Слиток 25 000 ₽",value:25000,kind:"ingot",rarity:"immortal"},{id:"cash100k",name:"Чемодан 100 000 ₽",value:100000,kind:"cash",rarity:"arcana"},
+        {id:"jackpot",name:"Джекпот 250 000 ₽",value:250000,kind:"ingot",rarity:"arcana"}
+      ];
     }
-    function task(promise) {
-      if(!promise||typeof promise.catch!=="function")return;
-      promise.catch(function(error){
-        console.error(error);
-        setToast(error&&error.message?error.message:"Не удалось выполнить операцию");
-      });
+    var ITEMS=defaultItems(),CASES=defaultCases();
+    function getItem(id){return ITEMS.find(function(i){return i.id===id;})||ITEMS[0];}
+    function getCase(id){return state.cases.find(function(c){return c.id===id;})||CASES.find(function(c){return c.id===id;})||CASES[0];}
+    function riskPrice(){return {L:50,M:100,H:250,E:500}[state.risk];}
+
+    function liveCard(drop){
+      var item=getItem(drop.itemId),big=(drop.value||0)>=5000;
+      return '<div class="live-card '+(big?"big":"")+'"><div class="live-icon">'+(big?"◆":"₽")+'</div><div class="live-text"><b>'+esc(drop.player||"Игрок")+'</b><span>'+esc(drop.caseName||"Кейс")+'</span></div><div class="live-value">'+money(drop.value||item.value||0)+'</div></div>';
     }
-    function applyProfile(profile) {
-      state.balance=Number(profile.balance)||0;
-      state.inventory=Array.isArray(profile.inventory)?profile.inventory:[];
-      state.nickname=profile.username||"Player";
-      state.opened=Number(profile.opened)||0;
-      state.bestDrop=Number(profile.best_drop)||0;
-      state.profit=Number(profile.profit)||0;
-      state.role=profile.role||"user";
-      state.isBanned=!!profile.is_banned;
-      if(state.isBanned){state.winnings=null;state.rolling=false;state.caseId=null;setToast("Аккаунт заблокирован. Игровые действия недоступны.");}
+    function header(){
+      var deposit=state.settings.demo_deposit?'':'';
+      return '<header class="topbar"><div class="inner"><button class="brand" data-action="nav" data-page="cases"><span class="logo">$</span><span class="brand-name">Money<em>Drop</em></span></button><nav class="nav '+(state.menu?"open":"")+'" id="main-nav"><button class="'+(state.page==="cases"?"active":"")+'" data-action="nav" data-page="cases">Кейсы</button><button class="'+(state.page==="inventory"?"active":"")+'" data-action="nav" data-page="inventory">Сейф</button><button class="'+(state.page==="upgrade"?"active":"")+'" data-action="nav" data-page="upgrade">Апгрейд</button><button class="'+(state.page==="profile"?"active":"")+'" data-action="nav" data-page="profile">Личный кабинет</button>'+((state.role==="admin")?' <button data-action="nav" data-page="admin">Админка</button>':'')+'</nav><div class="actions"><button class="deposit" data-action="cash">Пополнить</button>'+deposit+'<div class="balance"><i>₽</i> '+money(state.balance)+'</div><button class="avatar" data-action="nav" data-page="profile">'+esc((state.profile&&state.profile.username||"M").charAt(0).toUpperCase())+'</button><button class="mobile-menu secondary" data-action="menu">☰</button></div></div></header>';
     }
-    function refreshProfile() {
-      if(!state.user)return Promise.resolve(null);
-      return rpc("get_my_profile").then(function(profile){applyProfile(profile);return profile;});
+    function fillLive(){
+      if(state.live.length)return;
+      var names=["RichPlayer","VaultKing","MoneyMaker","LuckyRuble","EmeraldVIP"];
+      for(var i=0;i<8;i++){var item=ITEMS[Math.floor(Math.random()*ITEMS.length)];state.live.push({itemId:item.id,player:names[i%names.length],caseName:CASES[i%CASES.length].name,value:item.value});}
     }
-    function applyPublicData(data) {
-      if(Array.isArray(data.skins)&&data.skins.length)ITEMS=data.skins.map(function(item){
-        return {id:item.id,name:item.name,hero:item.hero,price:Number(item.price),rarity:item.rarity,icon:item.icon||"✦"};
-      });
-      state.dbSkins=ITEMS.slice();
-      if(Array.isArray(data.cases)){
-        state.dbCases=data.cases;
-        CASES=data.cases.filter(function(item){return item.id!=="risk";}).map(function(item){
-          return {id:item.id,name:item.name,price:Number(item.price),category:item.category,badge:item.badge,icon:item.icon,theme:item.theme,desc:item.description,items:(item.items||[]).map(function(skin){return skin.id;})};
-        });
+    function moneyArt(item){return art(item.kind,item.name+" "+item.value);}
+    function renderCases(){
+      var cats=[["fast","Быстрый старт"],["bank","Банковские сейфы"],["vip","VIP / Миллионер"],["risk","Риск-кейсы"]];
+      return '<main class="inner main"><section class="hero"><div class="hero-copy"><span class="tag"><i></i> LIVE CASINO • ₽</span><h1>Открой свой <span>денежный сейф</span></h1><p>Крупные номиналы, золотые слитки и премиальные карты. Выигрыш можно зачесть на баланс или оставить в сейфе.</p><button class="primary" data-action="scroll-cases">Выбрать кейс</button></div><div class="hero-art"><div class="vault"><div class="vault-door"></div><span class="cash-coin c1">₽</span><span class="cash-coin c2">$</span></div></div></section><section id="catalog">'+cats.map(function(cat){
+        var list=(state.cases.length?state.cases:CASES).filter(function(c){return c.category===cat[0];});
+        if(!list.length)return "";
+        return '<div class="section-title"><h2>'+cat[1]+'</h2><span>'+list.length+' кейс'+(list.length===1?"":"а")+'</span></div>'+ (cat[0]==="risk"?'<div class="risk"><div><b>Уровень риска</b><br><small>Каждый уровень меняет стоимость и размер приза</small></div><div class="risk-choice">'+["L","M","H","E"].map(function(r){return '<button class="'+(state.risk===r?"active":"")+'" data-action="risk" data-risk="'+r+'">'+r+'</button>';}).join("")+'</div></div>':'')+'<div class="case-grid">'+list.map(function(c){var price=c.category==="risk"?riskPrice():c.price;return '<button class="case-card '+esc(c.theme||"lime")+'" data-action="open-case" data-id="'+esc(c.id)+'"><span class="case-badge">'+esc(c.badge||"КЕЙС")+'</span><span class="case-art"><span class="case-visual"><span class="briefcase"></span></span></span><span class="case-info"><b>'+esc(c.name)+'</b><small>'+esc(c.description||"Денежный кейс")+'</small><span class="case-bottom"><span class="case-price">'+money(price)+'</span><span class="case-go">›</span></span></span></button>';}).join("")+'</div>';
+      }).join("")+'</section></main>';
+    }
+    function renderCase(){
+      var c=getCase(state.caseId),price=c.category==="risk"?riskPrice():c.price;
+      var reel=(state.reel||[]).map(function(item){return '<div class="money-card '+((item.value||0)>=5000?"big":"")+'">'+moneyArt(item)+'<div class="money-name">'+esc(item.name)+'</div><div class="money-value">'+money(item.value)+'</div></div>';}).join("");
+      if(!reel){reel=ITEMS.slice(0,9).map(function(item){return '<div class="money-card">'+moneyArt(item)+'<div class="money-name">'+esc(item.name)+'</div><div class="money-value">'+money(item.value)+'</div></div>';}).join("");}
+      return '<main class="inner main"><button class="back" data-action="back">← Назад к кейсам</button><div class="opening-head"><div><h1>'+esc(c.name)+'</h1><p>'+esc(c.description||"Откройте кейс и выберите зачисление или сейф")+'</p></div><div><b>'+money(price)+'</b></div></div>'+ (c.category==="risk"?'<div class="risk-choice" style="margin-bottom:10px">'+["L","M","H","E"].map(function(r){return '<button class="'+(state.risk===r?"active":"")+'" data-action="risk" data-risk="'+r+'">'+r+'</button>';}).join("")+'</div>':'')+'<section class="roulette"><div class="roulette-window"><div class="pointer"></div><div class="roulette-track" id="roulette-track">'+reel+'</div></div><div class="roulette-controls"><div class="quantity">'+[1,2,3,4].map(function(n){return '<button class="'+(state.quantity===n?"active":"")+'" data-action="quantity" data-value="'+n+'">'+n+'</button>';}).join("")+'</div><button class="open-button primary" data-action="open" '+(state.rolling?"disabled":"")+'>Открыть за '+money(price*state.quantity)+'</button></div></section><section>'+renderCaseContents(c)+'</section></main>';
+    }
+    function renderCaseContents(c){
+      var pool=(c.items||ITEMS).map(function(x){return typeof x==="string"?getItem(x):x;}).filter(Boolean);
+      return '<div class="section-title"><h2>Содержимое кейса</h2><span>Номиналы в рублях</span></div><div class="inventory">'+pool.map(function(item){return '<div class="inventory-card">'+moneyArt(item)+'<b>'+esc(item.name)+'</b><span>'+money(item.value)+'</span></div>';}).join("")+'</div>';
+    }
+    function renderInventory(){
+      var inv=state.inventory||[];
+      return '<main class="inner main"><div class="opening-head"><div><h1>Личный сейф</h1><p>Все выигрыши остаются защищенными в вашем аккаунте.</p></div><button class="secondary" data-action="sell-all" '+(!inv.length?"disabled":"")+'>Продать всё</button></div>'+ (inv.length?'<div class="inventory">'+inv.map(function(item){var it=getItem(item.itemId||item.id);return '<div class="inventory-card">'+moneyArt(it)+'<b>'+esc(item.name||it.name)+'</b><span>'+money(item.price||it.value)+'</span><button class="secondary" style="margin-top8px;width:100%" data-action="sell-item" data-uid="'+esc(item.uid||item.id)+'">Зачислить</button></div>';}).join(""):'<div class="panel">Сейф пуст. Откройте денежный кейс.</div>')+'</div></main>';
+    }
+    function renderProfile(){
+      return '<main class="inner main"><div class="opening-head"><div><h1>Личный кабинет</h1><p>'+esc((state.profile&&state.profile.username)||"Игрок")+'</p></div><button class="secondary" data-action="logout" '+(!state.user?"disabled":"")+'>Выйти</button></div><div class="grid2"><div class="panel"><span>Основной баланс</span><h2>'+money(state.balance)+'</h2><button class="primary" data-action="cash">Пополнить</button><button class="secondary" data-action="withdraw">Вывести</button></div><div class="panel"><span>Статистика</span><h2>'+((state.profile&&state.profile.opened)||0)+' кейсов</h2><p>Лучший выигрыш: '+money((state.profile&&state.profile.best_drop)||0)+'</p></div></div></main>';
+    }
+    function renderUpgrade(){
+      return '<main class="inner main"><div class="opening-head"><div><h1>Апгрейд денежного сейфа</h1><p>Повышайте номинал предмета из инвентаря.</p></div></div><div class="panel"><p>Выберите приз в сейфе и целевой номинал. Механика доступна после открытия кейса и входа в аккаунт.</p><div class="grid2"><div><label>Предмет в сейфе</label><select id="upgrade-source"><option value="">Выберите приз</option>'+state.inventory.map(function(i){return '<option value="'+esc(i.uid||i.id)+'">'+esc(i.name||getItem(i.itemId||i.id).name)+'</option>';}).join("")+'</select></div><div><label>Цель апгрейда</label><select id="upgrade-target">'+ITEMS.slice(4).map(function(i){return '<option value="'+esc(i.id)+'">'+esc(i.name)+' — '+money(i.value)+'</option>';}).join("")+'</select></div></div><button class="primary" style="margin-top12px" data-action="upgrade">Начать апгрейд</button></div></main>';
+    }
+    function renderAdmin(){
+      if(state.role!=="admin")return '<main class="inner main"><div class="panel">Недостаточно прав администратора.</div></main>';
+      var tabs=[["dashboard","Обзор"],["cases","Кейсы"],["items","Номиналы"],["transactions","Касса и заявки"],["settings","Настройки"],["promos","Промокоды"],["users","Игроки"]];
+      var tab=state.adminTab||"dashboard";
+      var body=renderAdminBody(tab);
+      return '<main class="inner main"><div class="opening-head"><div><h1>Админ-панель MoneyDrop</h1><p>Управление кейсами, RTP, заявками и реквизитами.</p></div></div><div class="tabs">'+tabs.map(function(t){return '<button class="'+(tab===t[0]?"active":"")+'" data-action="admin-tab" data-tab="'+t[0]+'">'+t[1]+'</button>';}).join("")+'</div>'+body+'</main>';
+    }
+    function renderAdminBody(tab){
+      var d=state.adminData||{};
+      if(tab==="dashboard")return '<div class="grid2"><div class="panel"><b>Игроки</b><h2>'+((d.overview&&d.overview.users)||0)+'</h2></div><div class="panel"><b>Открыто кейсов</b><h2>'+((d.overview&&d.overview.opens)||0)+'</h2></div></div>';
+      if(tab==="users")return '<div class="panel"><table class="table"><thead><tr><th>Игрок</th><th>Баланс</th><th>Роль</th><th>Действие</th></tr></thead><tbody>'+((d.users||[]).map(function(u){return '<tr><td>'+esc(u.username)+'</td><td>'+money(u.balance)+'</td><td>'+esc(u.role)+'</td><td><input style="width:120px" value="'+u.balance+'" data-balance-user="'+esc(u.id)+'"><button class="secondary" data-action="admin-balance" data-id="'+esc(u.id)+'">Сохранить</button></td></tr>';}).join("")||'<tr><td colspan="4">Нет игроков</td></tr>')+'</tbody></table></div>';
+      if(tab==="transactions"){
+        var filter=state.txFilter||"pending";
+        return '<div class="tabs">'+["pending","approved","completed","rejected","refunded","all"].map(function(f){return '<button class="'+(filter===f?"active":"")+'" data-action="tx-filter" data-filter="'+f+'">'+esc(f)+'</button>';}).join("")+'</div><div class="panel"><table class="table"><thead><tr><th>Игрок</th><th>Тип</th><th>Метод</th><th>Сумма</th><th>Статус</th><th>Действия</th></tr></thead><tbody>'+((d.transactions||[]).filter(function(t){return filter==="all"||t.status===filter;}).map(function(t){var actions="";
+          if(t.type==="deposit"&&t.status==="pending")actions='<button class="primary" data-action="tx-approve" data-id="'+esc(t.id)+'">Подтвердить</button> <button class="secondary" data-action="tx-reject" data-id="'+esc(t.id)+'">Отклонить</button>';
+          if(t.type==="withdraw"&&t.status==="pending")actions='<button class="primary" data-action="tx-complete" data-id="'+esc(t.id)+'">Выплачено</button> <button class="secondary" data-action="tx-refund" data-id="'+esc(t.id)+'">Отклонить с возвратом</button>';
+          return '<tr><td>'+esc(t.username||t.user_id)+'</td><td>'+esc(t.type)+'</td><td>'+esc(t.method)+'</td><td>'+money(t.amount)+'</td><td><span class="status '+esc(t.status)+'">'+esc(t.status)+'</span></td><td>'+actions+'</td></tr>';}).join("")||'<tr><td colspan="6">Заявок нет</td></tr>')+'</tbody></table></div>';
       }
-      if(data.settings)state.settings=data.settings;
-      state.live=(data.drops||[]).map(function(drop){
-        var skin=ITEMS.filter(function(item){return item.name===drop.skin_name;})[0];
-        return skin?{itemId:skin.id,player:drop.username,caseName:drop.case_name}:null;
-      }).filter(Boolean).slice(0,15);
-      fillBotDrops();
+      if(tab==="settings")return '<div class="panel"><div class="grid2"><div class="field"><label>Номер карты РФ</label><input id="setting-card" value="'+esc(state.settings.card_requisite)+'"></div><div class="field"><label>Номер СБП / телефон</label><input id="setting-sbp" value="'+esc(state.settings.sbp_requisite)+'"></div><div class="field"><label>USDT кошелек (TRC20)</label><input id="setting-usdt" value="'+esc(state.settings.usdt_requisite)+'"></div><div class="field"><label><input type="checkbox" id="setting-demo" '+(state.settings.demo_deposit?"checked":"")+' style="width:auto"> Демо-пополнение</label></div><div class="field"><label>RTP от 10 до 200 (%)</label><input id="setting-rtp" type="number" min="10" max="200" value="'+Math.round(state.settings.rtp_multiplier*100)+'"></div><div class="field"><label>Режим стримера</label><input type="checkbox" id="setting-streamer" '+(state.settings.streamer_mode?"checked":"")+'></label></div></div><button class="primary" data-action="admin-save-settings">Сохранить настройки</button></div>';
+      if(tab==="promos")return '<div class="panel"><div class="grid2"><div class="field"><label>Код</label><input id="promo-code" value="WELCOME"></div><div class="field"><label>Бонус ₽</label><input id="promo-reward" type="number" value="500"></div><div class="field"><label>Активаций</label><input id="promo-limit" type="number" value="100"></div></div><button class="primary" data-action="admin-save-promo">Создать промокод</button></div>';
+      if(tab==="cases")return '<div class="panel"><table class="table"><thead><tr><th>Кейс</th><th>Категория</th><th>Цена</th><th>Статус</th></tr></thead><tbody>'+((d.cases||[]).map(function(c){return '<tr><td>'+esc(c.name)+'</td><td>'+esc(c.category)+'</td><td>'+money(c.price)+'</td><td>Активен</td></tr>';}).join("")||'<tr><td colspan="4">Используйте SQL seed для добавления кейсов</td></tr>')+'</tbody></table></div>';
+      if(tab==="items")return '<div class="panel"><div class="inventory">'+((d.items||ITEMS).map(function(i){return '<div class="inventory-card">'+moneyArt(i)+'<b>'+esc(i.name)+'</b><span>'+money(i.value||i.price)+'</span></div>';}).join(""))+'</div></div>';
+      return '<div class="panel">Раздел готов к подключению данных Supabase.</div>';
     }
-    function fillBotDrops() {
-      while(state.live.length<8){
-        var skin=ITEMS[Math.floor(Math.random()*ITEMS.length)];
-        state.live.push({itemId:skin.id,player:NAMES[Math.floor(Math.random()*NAMES.length)],caseName:CASES.length?CASES[Math.floor(Math.random()*CASES.length)].name:"Демо-кейс"});
+    function cashModal(){
+      var isWithdraw=state.cashTab==="withdraw";
+      if(state.cashStep==="payment"){
+        var requisites={sbp:state.settings.sbp_requisite||"Реквизиты СБП укажет администратор",card:state.settings.card_requisite||"Реквизиты карты укажет администратор",usdt:state.settings.usdt_requisite||"USDT кошелек укажет администратор"};
+        return '<div class="modal"><button class="modal-x" data-action="modal-close">×</button><h2>Реквизиты для оплаты</h2><p>'+esc(requisites[state.method])+'</p><div class="panel"><b>К оплате: '+money(state.amount)+'</b></div><div class="modal-actions"><button class="secondary" data-action="cash-back">Назад</button><button class="primary" data-action="cash-paid">Я оплатил</button></div></div>';
       }
-      state.live=state.live.slice(0,15);
+      if(isWithdraw)return '<div class="modal"><button class="modal-x" data-action="modal-close">×</button><h2>Вывод средств</h2><p>Минимальная сумма — 500 ₽. Средства списываются сразу, заявка проверяется администратором.</p><div class="methods"><button class="method '+(state.withdrawMethod==="sbp"?"active":"")+'" data-action="withdraw-method" data-method="sbp"><b>СБП</b><span>По телефону</span></button><button class="method '+(state.withdrawMethod==="card"?"active":"")+'" data-action="withdraw-method" data-method="card"><b>Карта РФ</b><span>Номер карты</span></button><button class="method '+(state.withdrawMethod==="usdt"?"active":"")+'" data-action="withdraw-method" data-method="usdt"><b>USDT</b><span>TRC20 кошелек</span></button></div><div class="field" style="margin-top12px"><label>Реквизиты</label><input id="withdraw-address" value="'+esc(state.withdrawAddress)+'" placeholder="Введите номер или адрес"></div><div class="field"><label>Сумма</label><input id="withdraw-amount" type="number" min="500" value="'+state.withdrawAmount+'"></div><div class="modal-actions"><button class="secondary" data-action="modal-close">Отмена</button><button class="primary" data-action="withdraw-create">Создать заявку</button></div></div>';
+      return '<div class="modal"><button class="modal-x" data-action="modal-close">×</button><h2>Касса MoneyDrop</h2><p>Пополнение без данных карты на устройстве. Окончательное зачисление после подтверждения администратором.</p><div class="tabs"><button class="active" data-action="cash-tab" data-tab="deposit">Пополнить</button><button data-action="cash-tab" data-tab="withdraw">Вывести</button></div><div class="methods"><button class="method '+(state.method==="sbp"?"active":"")+'" data-action="pay-method" data-method="sbp"><b>СБП</b><span>Быстрый платеж</span></button><button class="method '+(state.method==="card"?"active":"")+'" data-action="pay-method" data-method="card"><b>Карта РФ</b><span>Банковская карта</span></button><button class="method '+(state.method==="usdt"?"active":"")+'" data-action="pay-method" data-method="usdt"><b>USDT</b><span>Криптовалюта</span></button>'+ (state.settings.demo_deposit?'<button class="method '+(state.method==="demo"?"active":"")+'" data-action="pay-method" data-method="demo"><b>Демо</b><span>Тестовое пополнение</span></button>':'')+'</div><div class="amounts">'+[100,500,1000,5000].map(function(a){return '<button class="'+(state.amount===a?"active":"")+'" data-action="amount" data-amount="'+a+'">'+money(a)+'</button>';}).join("")+'</div><div class="grid2"><div class="field"><label>Своя сумма</label><input id="cash-custom" type="number" min="100" value="'+state.amount+'"></div><div class="field"><label>Промокод</label><input id="cash-promo" value="'+esc(state.promo)+'" placeholder="WELCOME"></div></div><div class="modal-actions"><button class="secondary" data-action="modal-close">Отмена</button><button class="primary" data-action="cash-pay">'+(state.method==="demo"?"Создать демо-заявку":"Перейти к оплате")+'</button></div></div>';
     }
-    function refreshPublic() {
-      return rpc("get_public_bootstrap").then(function(data){applyPublicData(data);return data;});
+    function winModal(){
+      var wins=state.winnings||[];
+      return '<div class="modal"><button class="modal-x" data-action="modal-close">×</button><span class="tag">ДРОП ПОЛУЧЕН</span><h2>'+ (wins.length===1?"Новый приз":"Несколько призов")+'</h2><div class="wins">'+wins.map(function(item){return '<div class="win-card">'+moneyArt(item)+'<strong>'+esc(item.name)+'</strong><span>'+money(item.value)+'</span></div>';}).join("")+'</div><div class="modal-actions"><button class="secondary" data-action="keep">Оставить в сейфе</button><button class="primary" data-action="claim">Зачислить на баланс</button></div></div>';
     }
-    function refreshAccount() {
-      if(!state.user)return Promise.resolve();
-      return refreshProfile().then(function(){return state.role==="admin"?loadAdminTab(state.adminTab):null;});
+    function authModal(){
+      if(!state.modal)return "";
+      if(state.modal==="auth")return '<div class="modal-bg"><div class="modal"><button class="modal-x" data-action="modal-close">×</button><h2>'+ (state.authMode==="signup"?"Регистрация":"Вход")+'</h2><form class="auth-form" data-form="auth">'+(state.authMode==="signup"?'<div class="field"><label>Никнейм</label><input name="username" minlength="2" maxlength="18" required></div>':'')+'<div class="field"><label>Email</label><input name="email" type="email" required></div><div class="field"><label>Пароль</label><input name="password" type="password" minlength="6" required></div><button class="primary" type="submit">'+(state.authMode==="signup"?"Создать аккаунт":"Войти")+'</button><button class="secondary" type="button" data-action="auth-switch">'+(state.authMode==="signup"?"Уже есть аккаунт":"Создать аккаунт")+'</button></form></div></div>';
+      if(state.modal==="cash"||state.modal==="withdraw")return '<div class="modal-bg">'+cashModal()+'</div>';
+      if(state.modal==="win")return '<div class="modal-bg">'+winModal()+'</div>';
+      return "";
     }
-    function setToast(message) {
-      var old=document.querySelector(".toast");
-      if (old) old.parentNode.removeChild(old);
-      var toast=document.createElement("div");
-      toast.className="toast";
-      toast.textContent=message;
-      document.body.appendChild(toast);
-      window.clearTimeout(state.toastTimer);
-      state.toastTimer=window.setTimeout(function(){if(toast.parentNode)toast.parentNode.removeChild(toast);},2600);
+    function footer(){return '<footer class="footer inner">MoneyDrop — виртуальный игровой баланс и ручные заявки. Рекомендуем 18+.</footer>'; }
+    function render(){
+      fillLive();
+      var content=state.page==="admin"?renderAdmin():state.page==="inventory"?renderInventory():state.page==="profile"?renderProfile():state.page==="upgrade"?renderUpgrade():state.caseId?renderCase():renderCases();
+      root.innerHTML='<div class="shell">'+header()+'<div class="inner livebar"><strong>LIVE DROP</strong><div class="live-list">'+state.live.slice(0,8).map(liveCard).join("")+'</div></div>'+content+footer()+(state.toast?'<div class="toast">'+esc(state.toast)+'</div>':'')+authModal()+'</div>';
     }
-    function audioContext() {
-      if(state.audioContext)return state.audioContext;
-      var AudioCtor=window.AudioContext||window.webkitAudioContext;
-      if(!AudioCtor)return null;
-      state.audioContext=new AudioCtor();
-      return state.audioContext;
+
+    async function refreshProfile(){
+      if(!state.user)return;
+      var p=await rpc("get_my_profile");
+      state.profile=p;state.balance=Number(p.balance)||0;state.inventory=p.inventory||[];state.role=p.role||"user";
     }
-    function playTone(frequency,duration,wave,volume,delay) {
-      var context=state.audioContext;
-      if(!state.soundOn||!context)return;
-      var start=context.currentTime+(delay||0),osc=context.createOscillator(),gain=context.createGain();
-      osc.type=wave||"sine";
-      osc.frequency.setValueAtTime(frequency,start);
-      gain.gain.setValueAtTime(.0001,start);
-      gain.gain.exponentialRampToValueAtTime(Math.max(.001,volume||.04),start+.008);
-      gain.gain.exponentialRampToValueAtTime(.0001,start+duration);
-      osc.connect(gain);gain.connect(context.destination);
-      osc.start(start);osc.stop(start+duration+.015);
-    }
-    function playUiClick() { playTone(780,.035,"sine",.025,0); }
-    function playRouletteTick(progress) {
-      playTone(1500-Math.min(1,progress)*430,.045,"square",.032,0);
-    }
-    function playWinSound(items) {
-      if(!state.soundOn)return;
-      var epic=items.some(function(item){return item.rarity==="immortal"||item.rarity==="arcana";});
-      if(epic){
-        [65.4,130.8,164.8,196,261.6,329.6].forEach(function(note,index){
-          playTone(note,index===0?.85:.62,index===0?"sine":"triangle",index===0?.075:.042,index===0?0:index*.035);
-        });
-        playTone(523.25,.78,"sine",.028,.24);
+    async function refreshPublic(){
+      var d=await rpc("get_public_bootstrap");
+      if(d&&d.settings)state.settings=Object.assign(state.settings,d.settings);
+      state.moneydropSchema=!!(d&&Array.isArray(d.items)&&Array.isArray(d.cases));
+      if(state.moneydropSchema&&d.cases.length){
+        state.cases=d.cases.map(function(c){return {id:c.id,name:c.name,price:Number(c.price),category:c.category,badge:c.badge,theme:c.theme,description:c.description,items:(c.items||[]).map(function(i){return i.id;})};});
       }else{
-        [523.25,659.25,783.99,1046.5].forEach(function(note,index){
-          playTone(note,.16,"sine",.04,index*.105);
-        });
+        state.cases=[];
       }
+      if(state.moneydropSchema&&d.items.length){ITEMS=d.items.map(function(i){return {id:i.id,name:i.name,value:Number(i.price),kind:i.kind||(/карта|card/i.test(i.name)?"card":/слит/i.test(i.name)?"ingot":/пач/i.test(i.name)?"cash":"coin"),rarity:i.rarity};});}
     }
-    function toggleSound() {
-      if(state.soundOn){
-        state.soundOn=false;
-        if(state.audioContext)state.audioContext.suspend().catch(function(error){console.error(error);});
-        render();
+    async function loadAdmin(){
+      if(state.role!=="admin")return;
+      var d={};
+      try{d.overview=await rpc("admin_overview");d.users=await rpc("admin_list_users");d.transactions=await rpc("admin_list_transactions",{p_filter:"all"});}catch(e){console.error(e);}
+      d.cases=state.cases;d.items=ITEMS;state.adminData=d;
+      render();
+    }
+    async function openCase(){
+      if(!state.user){state.modal="auth";state.authMode="login";render();return toast("Войдите, чтобы открыть кейс");}
+      if(!state.moneydropSchema)return toast("База Supabase использует старую версию. Выполните актуальный supabase.sql, чтобы включить кейсы MoneyDrop.");
+      var c=getCase(state.caseId),price=c.category==="risk"?riskPrice():c.price;
+      if(Number(state.balance)<price*state.quantity){
+        return toast("Недостаточно средств. Пополните баланс или выберите дешевый кейс.");
+      }
+      state.rolling=true;render();
+      try{
+        var r=await rpc("open_case",{p_case_id:c.id,p_quantity:state.quantity,p_risk_level:state.risk});
+        state.balance=Number(r.balance)||state.balance;
+        state.winnings=(r.drops||[]).map(function(d){return {id:d.id,name:d.name,value:Number(d.price),kind:d.kind||"cash",rarity:d.rarity};});
+        state.winningsIds=r.inventory_ids||[];
+        var reel=[];
+        for(var i=0;i<26;i++){reel.push(ITEMS[(Math.floor(Math.random()*ITEMS.length))]);}
+        reel[13]=state.winnings[0]||ITEMS[0];state.reel=reel;
+        state.rolling=false;render();
+        var track=document.getElementById("roulette-track"),viewport=document.querySelector(".roulette-window");
+        if(track&&viewport){track.style.transition="transform 2.4s cubic-bezier(.12,.75,.12,1)";track.style.transform="translateX(-"+(Math.max(0,13*146-viewport.clientWidth/2))+"px)";}
+        playWin();
+        setTimeout(function(){state.modal="win";render();refreshProfile();refreshPublic();},2500);
+      }catch(e){state.rolling=false;render();toast(e.message||"Не удалось открыть кейс");}
+    }
+    async function claim(sell){
+      if(!state.winnings)return;
+      try{
+        if(sell)await rpc("sell_inventory",{p_inventory_ids:state.winningsIds});
+        await refreshProfile();
+        state.modal=null;state.winnings=null;state.winningsIds=[];render();toast(sell?"Выигрыш зачтен на баланс":"Приз оставлен в сейфе");
+      }catch(e){toast(e.message||"Ошибка операции");}
+    }
+    async function createDeposit(){
+      if(!state.user){state.modal="auth";state.authMode="login";render();return;}
+      var custom=Number(document.getElementById("cash-custom")&&document.getElementById("cash-custom").value||state.amount);
+      state.amount=Math.max(100,custom);state.promo=document.getElementById("cash-promo")&&document.getElementById("cash-promo").value||state.promo;
+      if(state.method==="demo"){
+        try{var dr=await rpc("create_deposit",{p_amount:state.amount,p_method:"demo",p_promo_code:state.promo});state.modal=null;render();toast("Демо-заявка создана: "+dr.status);}catch(e){toast(e.message);}
         return;
       }
-      var context;
-      try{context=audioContext();}catch(error){console.error(error);setToast("Не удалось запустить Web Audio.");return;}
-      if(!context){setToast("Этот браузер не поддерживает Web Audio.");return;}
-      state.soundOn=true;
-      context.resume().then(function(){playUiClick();}).catch(function(error){
-        state.soundOn=false;console.error(error);setToast("Не удалось включить звук: "+error.message);
+      state.cashStep="payment";render();
+    }
+    async function paidDeposit(){
+      try{var r=await rpc("create_deposit",{p_amount:state.amount,p_method:state.method,p_promo_code:state.promo});state.modal=null;state.cashStep="method";render();toast("Заявка создана, статус: "+r.status);}
+      catch(e){toast(e.message||"Не удалось создать заявку");}
+    }
+    async function createWithdraw(){
+      var address=document.getElementById("withdraw-address"),amount=document.getElementById("withdraw-amount");
+      state.withdrawAddress=address?address.value.trim():state.withdrawAddress;state.withdrawAmount=amount?Number(amount.value):state.withdrawAmount;
+      if(!state.withdrawAddress)return toast("Укажите реквизиты");
+      try{var r=await rpc("create_withdraw",{p_amount:state.withdrawAmount,p_method:state.withdrawMethod,p_details:state.withdrawAddress});state.modal=null;await refreshProfile();render();toast("Заявка на вывод создана");}
+      catch(e){toast(e.message||"Не удалось создать заявку");}
+    }
+    async function authSubmit(form){
+      var fd=new FormData(form),email=fd.get("email").trim().toLowerCase(),password=fd.get("password");
+      try{
+        if(state.authMode==="signup"){var sr=await db.auth.signUp({email:email,password:password,options:{data:{username:fd.get("username")}}});if(sr.error)throw sr.error;}
+        else{var lr=await db.auth.signInWithPassword({email:email,password:password});if(lr.error)throw lr.error;state.session=lr.data.session;state.user=lr.data.user;}
+        if(!state.session&&db.auth){var gr=await db.auth.getSession();state.session=gr.data.session;state.user=state.session&&state.session.user;}
+        state.modal=null;await refreshProfile();await refreshPublic();render();toast("Аккаунт готов");
+      }catch(e){toast(e.message||"Ошибка авторизации");}
+    }
+    async function signOut(){await db.auth.signOut();state.user=null;state.session=null;state.profile=null;state.role="user";state.balance=0;state.inventory=[];render();}
+
+    function audioCtx(){if(!state.audio){var C=window.AudioContext||window.webkitAudioContext;if(C)state.audio=new C();}return state.audio;}
+    function tone(freq,dur){if(!state.sound)return;try{var c=audioCtx();if(!c)return;var o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=freq;g.gain.setValueAtTime(.04,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+dur);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+dur);}catch(e){}}
+    function playWin(){
+      [523,659,784,1047].forEach(function(f,i){
+        setTimeout(function(){tone(f,.18);},i*120);
       });
+    }
+
+    document.addEventListener("click",function(e){
+      var b=e.target.closest("[data-action]");if(!b)return;
+      var a=b.dataset.action;
+      if(a==="nav"){state.page=b.dataset.page;state.caseId=null;state.menu=false;if(state.page==="admin")loadAdmin();render();}
+      else if(a==="menu"){state.menu=!state.menu;render();}
+      else if(a==="cash"){state.modal="cash";state.cashTab="deposit";state.cashStep="method";render();}
+      else if(a==="withdraw"){if(!state.user){state.modal="auth";state.authMode="login";render();}else{state.modal="withdraw";state.cashTab="withdraw";render();}}
+      else if(a==="modal-close"){state.modal=null;state.cashStep="method";render();}
+      else if(a==="cash-tab"){state.cashTab=b.dataset.tab;state.modal=state.cashTab==="withdraw"?"withdraw":"cash";render();}
+      else if(a==="pay-method"){state.method=b.dataset.method;render();}
+      else if(a==="withdraw-method"){state.withdrawMethod=b.dataset.method;render();}
+      else if(a==="amount"){state.amount=Number(b.dataset.amount);render();}
+      else if(a==="cash-pay")createDeposit();
+      else if(a==="cash-back"){state.cashStep="method";render();}
+      else if(a==="cash-paid")paidDeposit();
+      else if(a==="withdraw-create")createWithdraw();
+      else if(a==="open-case"){state.caseId=b.dataset.id;render();}
+      else if(a==="back"){state.caseId=null;render();}
+      else if(a==="risk"){state.risk=b.dataset.risk;if(state.caseId)render();else render();}
+      else if(a==="quantity"){state.quantity=Number(b.dataset.value);render();}
+      else if(a==="open")openCase();
+      else if(a==="keep")claim(false);
+      else if(a==="claim")claim(true);
+      else if(a==="sell-item")rpc("sell_inventory",{p_inventory_ids:[b.dataset.uid]}).then(function(){return refreshProfile();}).then(function(){render();toast("Приз зачтен на баланс");}).catch(function(x){toast(x.message);});
+      else if(a==="sell-all"){var ids=state.inventory.map(function(i){return i.uid||i.id;});rpc("sell_inventory",{p_inventory_ids:ids}).then(function(){return refreshProfile();}).then(function(){render();toast("Сейф зачтен на баланс");}).catch(function(x){toast(x.message);});}
+      else if(a==="scroll-cases"){document.getElementById("catalog").scrollIntoView({behavior:"smooth"});}
+      else if(a==="logout")signOut();
+      else if(a==="auth-open"){state.modal="auth";state.authMode=b.dataset.mode||"login";render();}
+      else if(a==="auth-switch"){state.authMode=state.authMode==="signup"?"login":"signup";render();}
+      else if(a==="upgrade"){
+        var source=document.getElementById("upgrade-source").value,target=document.getElementById("upgrade-target").value;
+        if(!source)return toast("Выберите предмет в сейфе");
+        rpc("upgrade_item",{p_inventory_id:source,p_target_skin_id:target,p_use_balance:false,p_stake:0}).then(function(r){return refreshProfile().then(function(){render();toast(r.success?"Апгрейд успешен":"Апгрейд неуспешен");});}).catch(function(x){toast(x.message);});
+      }
+      else if(a==="admin-tab"){state.adminTab=b.dataset.tab;render();}
+      else if(a==="tx-filter"){state.txFilter=b.dataset.filter;render();}
+      else if(a==="tx-approve"){rpc("admin_approve_deposit",{p_transaction_id:b.dataset.id}).then(loadAdmin).catch(function(x){toast(x.message);});}
+      else if(a==="tx-reject"){rpc("admin_reject_transaction",{p_transaction_id:b.dataset.id}).then(loadAdmin).catch(function(x){toast(x.message);});}
+      else if(a==="tx-complete"){rpc("admin_complete_withdraw",{p_transaction_id:b.dataset.id}).then(loadAdmin).catch(function(x){toast(x.message);});}
+      else if(a==="tx-refund"){rpc("admin_refund_withdraw",{p_transaction_id:b.dataset.id}).then(loadAdmin).catch(function(x){toast(x.message);});}
+      else if(a==="admin-balance"){var id=b.dataset.id,input=document.querySelector('[data-balance-user="'+id+'"]');rpc("admin_set_balance",{p_user_id:id,p_balance:Number(input.value)}).then(loadAdmin).catch(function(x){toast(x.message);});}
+      else if(a==="admin-save-settings"){rpc("admin_save_settings",{p_rtp:Number(document.getElementById("setting-rtp").value)/100,p_streamer_mode:document.getElementById("setting-streamer").checked,p_banner_title:"MoneyDrop",p_live_drop_speed:5,p_card_requisite:document.getElementById("setting-card").value,p_sbp_requisite:document.getElementById("setting-sbp").value,p_usdt_requisite:document.getElementById("setting-usdt").value,p_demo_deposit:document.getElementById("setting-demo").checked}).then(refreshPublic).then(loadAdmin).catch(function(x){toast(x.message);});}
+      else if(a==="admin-save-promo"){rpc("admin_save_promocode",{p_code:document.getElementById("promo-code").value,p_reward:Number(document.getElementById("promo-reward").value),p_activations:Number(document.getElementById("promo-limit").value)}).then(function(){toast("Промокод сохранен");}).catch(function(x){toast(x.message);});}
+    });
+    document.addEventListener("submit",function(e){if(e.target.dataset.form==="auth"){e.preventDefault();authSubmit(e.target);}});
+
+    async function init(){
+      render();
+      try{
+        var session=await db.auth.getSession();state.session=session.data.session;state.user=state.session&&state.session.user;
+        await refreshPublic();
+        await refreshProfile();
+        if(state.user&&state.role==="admin")await loadAdmin();
+      }catch(e){console.error(e);}
       render();
     }
-    function soundToggle() {
-      return '<button class="sound-toggle" data-action="sound" aria-pressed="'+state.soundOn+'" aria-label="'+(state.soundOn?"Выключить звук":"Включить звук")+'"><span>'+(state.soundOn?"◖))":"◖×")+'</span><em>Звук '+(state.soundOn?"вкл.":"выкл.")+'</em></button>';
-    }
-    function addBalance(amount) {
-      if(!state.user){state.authDialog="login";render();setToast("Войдите, чтобы получить демо-баланс");return Promise.resolve();}
-      if(state.isBanned){setToast("Аккаунт заблокирован");return Promise.resolve();}
-      return rpc("add_demo_balance",{p_amount:amount}).then(function(result){
-        state.balance=Number(result.balance)||state.balance;render();setToast("+"+money(amount)+" добавлено на баланс");
-      }).catch(function(error){setToast(error.message||"Не удалось пополнить баланс");});
-    }
-    function getCase(id) {
-      for(var j=0;j<state.dbCases.length;j++)if(state.dbCases[j].id===id){
-        var dbCase=state.dbCases[j];
-        return {id:dbCase.id,name:dbCase.name,price:Number(dbCase.price),badge:dbCase.badge,icon:dbCase.icon,theme:dbCase.theme,desc:dbCase.description,items:(dbCase.items||[]).map(function(skin){return skin.id;})};
-      }
-      if (id==="risk") return {id:"risk",name:"Игра на грани",price:RISK_PRICES[state.risk],badge:"RISK MODE",icon:"⚡",theme:"risk",desc:"Выбери свой уровень риска",items:["mace","crown","sword","hook","pa-arcana","exalted"]};
-      for(var i=0;i<CASES.length;i++)if(CASES[i].id===id)return CASES[i];
-      return CASES[0];
-    }
-    var skinArtSequence=0;
-    function skinSvg(item) {
-      var text=(item.name+" "+item.hero).toLowerCase(),kind="weapon";
-      if(/hook|bonesaw|diffuser|ripper|saw/.test(text))kind="hook";
-      else if(/wing|cape|mantle|feather|flight|gamb|companion/.test(text))kind="wings";
-      else if(/cloak|robe|armor|pauldron|retribution|aria/.test(text))kind="cape";
-      else if(/helm|crown|mask|head|king/.test(text))kind="helm";
-      else if(item.rarity==="arcana"||/arcana|planetfall|compass|apostasy|eater|paradox/.test(text))kind="arcana";
-      var id=(String(item.id||"skin").replace(/[^a-z0-9_-]/gi,"")||"skin")+"-"+(++skinArtSequence);
-      var shapes={
-        weapon:'<path d="M47 6 62 22 42 48 36 42 48 22Z"/><path d="m34 40 8 8-7 7-8-8z"/><path d="m31 53-8 9"/><path d="m40 40 8 8M45 35l8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
-        hook:'<path d="M47 10c13 2 17 16 8 25-6 6-14 3-17-2 7 3 12-1 12-7 0-5-4-9-9-9-9 0-14 10-10 18l-7-2C17 19 29 8 47 10Z"/><path d="m36 34 8 8-8 8-8-8z"/><path d="m36 47-8 14M45 41l9 9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
-        wings:'<path d="M35 42C22 39 15 27 16 14c7 3 12 8 16 15-1-12 3-20 10-25 4 11 4 20 1 28 7-8 15-12 24-12-2 14-10 23-22 26l-5 17h-9z"/><path d="M39 32c-6-8-12-12-19-14M43 32c5-7 11-11 19-13M37 39l-15-2M45 39l13-3" fill="none" stroke="#fff" stroke-opacity=".46" stroke-width="1.6"/>',
-        cape:'<path d="m27 14 13-7 13 7 9 10-8 36H26l-8-36z"/><path d="m27 14 13 9 13-9M40 23v37M25 35l15 5 15-5" fill="none" stroke="#fff" stroke-opacity=".52" stroke-width="1.7"/><path d="m34 12 6 5 6-5" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="2"/>',
-        helm:'<path d="M18 45a22 22 0 0 1 44 0v9H18z"/><path d="m16 44 9-4 3-18 12 10 12-10 3 18 9 4M28 52h24l-4 10H32z"/><path d="M38 40h4v11h-4z" fill="#fff" fill-opacity=".72"/>',
-        arcana:'<path d="m40 7 18 14-4 28-14 15-14-15-4-28z"/><path d="m40 7 1 57M22 21l18 11 18-11M26 49l14-17 14 17" fill="none" stroke="#fff" stroke-opacity=".62" stroke-width="1.8"/><circle cx="40" cy="39" r="6" fill="#fff" fill-opacity=".76"/><path d="M12 25c9-16 31-20 47-8M14 53c7 12 23 18 39 12" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="1.4"/>'
-      };
-      return '<svg viewBox="0 0 80 80" class="skin-svg '+kind+'" aria-hidden="true"><defs><linearGradient id="skin-metal-'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".92"/><stop offset=".35" stop-color="currentColor"/><stop offset="1" stop-color="currentColor" stop-opacity=".38"/></linearGradient><filter id="skin-glow-'+id+'" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="40" cy="40" r="27" fill="currentColor" opacity=".10"/><g fill="url(#skin-metal-'+id+')" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" filter="url(#skin-glow-'+id+')">'+shapes[kind]+'</g><circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" stroke-opacity=".18" stroke-dasharray="2 5"/></svg>';
-    }
-    function itemArt(item) {
-      var initials=String(item.hero||"").split(" ").map(function(word){return word.charAt(0);}).join("").slice(0,2);
-      return '<span class="item-art '+escapeHtml(item.rarity)+'">'+skinSvg(item)+'<i>'+escapeHtml(initials)+'</i></span>';
-    }
-    function liveCard(drop) {
-      var item=getItem(drop.itemId);
-      return '<div class="live-card '+escapeHtml(item.rarity)+'"><span class="live-art">'+skinSvg(item)+'</span><span class="live-name">'+escapeHtml(item.name)+'</span><b class="live-price">'+money(item.price)+'</b><span class="live-tip"><b>'+escapeHtml(drop.player)+'</b> выбил в кейсе '+escapeHtml(drop.caseName)+'</span></div>';
-    }
-    function initDrops() {
-      fillBotDrops();
-    }
-    function updateLive() {
-      refreshPublic().then(function(){
-        var list=document.getElementById("live-list");
-        if(list)list.innerHTML=state.live.map(liveCard).join("");
-        var title=document.querySelector(".hero h1");
-        if(title&&state.settings.banner_title)title.textContent=state.settings.banner_title;
-        if(state.page==="admin"&&state.adminTab==="dashboard")refreshAdminDashboard();
-      }).catch(function(error){console.error(error);}).finally(function(){
-        window.setTimeout(updateLive,Math.max(1,Number(state.settings.live_drop_speed)||5)*1000);
-      });
-    }
-    function header() {
-      var nav=[["cases","▦","Кейсы"],["upgrade","↗","Апгрейд"],["contracts","⚔","Контракты"],["bonuses","✦","Бонусы"]];
-      var actions=state.user?'<button class="demo-button" data-action="demo">＋ Демо-пополнение <strong>+1000 ₽</strong></button><span class="balance">'+money(state.balance)+'</span><button class="avatar-button" data-action="profile" aria-label="Личный кабинет"><span class="avatar">'+escapeHtml(state.nickname.charAt(0).toUpperCase())+'</span><span>⌄</span></button>'+(state.role==="admin"?'<button class="admin-button" data-action="nav" data-page="admin">Админ-панель</button>':'')+'<button class="auth-button" data-action="logout">Выйти</button>':'<div class="auth-actions"><button data-action="auth-open" data-mode="login">Войти</button><button class="register-button" data-action="auth-open" data-mode="signup">Регистрация</button></div>';
-      return '<header class="topbar"><div class="topbar-inner"><button class="brand" data-action="home" aria-label="На главную"><span class="brand-mark">ϟ</span><span>NEON<em>DROP</em></span></button><nav class="nav" id="main-nav">'+nav.map(function(link){return '<button data-action="nav" data-page="'+link[0]+'" class="'+(state.page===link[0]&&!state.caseId?"active":"")+'">'+link[1]+' '+link[2]+'</button>';}).join("")+'</nav><div class="top-actions">'+soundToggle()+actions+'</div><button class="menu-toggle" data-action="menu" aria-label="Открыть меню">☰</button></div></header>';
-    }
-    function footer() {
-      return '<footer class="footer"><strong>NEONDROP · НЕОФИЦИАЛЬНЫЙ ФАН-САЙТ</strong><span class="disclaimer">◇ Только виртуальная валюта. Без платежей и вывода средств.</span><button data-action="help">Как это работает?</button></footer>';
-    }
-    function caseCard(item) {
-      return '<button class="case-card '+escapeHtml(item.theme)+'" data-action="open-case" data-id="'+escapeHtml(item.id)+'">'+(item.badge?'<span class="case-badge">'+escapeHtml(item.badge)+'</span>':'')+'<span class="case-art"><span class="case-halo"></span><span class="case-symbol">'+escapeHtml(item.icon)+'</span><span class="case-spark">✦</span><span class="case-word">NEON<br>DROP</span></span><span class="case-info"><span class="case-title">'+escapeHtml(item.name)+'</span><span class="case-desc">'+escapeHtml(item.desc)+'</span><span class="case-bottom"><b class="case-price">'+money(item.id==="risk"?RISK_PRICES[state.risk]:item.price)+'</b><span class="case-go">↗</span></span></span></button>';
-    }
-    function sectionHeading(kicker,title,right) {
-      return '<div class="section-head"><div><span class="eyebrow">'+kicker+'</span><h2>'+title+'</h2></div>'+(right||"")+'</div>';
-    }
-    function renderCases() {
-      var riskCase=getCase("risk");
-      var levels=["L","M","H","E"];
-      var popularIds=["deal","black","bulk","triple","secret","budget-start"];
-      var popular=CASES.filter(function(item){return item.category?item.category==="popular":popularIds.indexOf(item.id)!==-1;});
-      var featured=CASES.filter(function(item){return popular.indexOf(item)===-1;});
-      return '<div class="wrap main"><section class="hero"><div class="hero-copy"><div class="event-tag"><i></i> BLACK MARKET EVENT <span>·</span> <b id="countdown">23 ДН. 00:00:00</b></div><h1>'+escapeHtml(state.settings.banner_title||"Твой следующий дроп уже близко.")+'</h1><p>Открывай кейсы, собирай легендарные предметы<br> и прокачивай инвентарь до максимума.</p><button class="primary" data-action="scroll-cases">Участвовать　➜</button><div class="hero-stats"><span><b>'+ITEMS.length+'</b> предметов</span><span><b>'+Number(CASES.length+1)+'</b> кейсов</span><span><b>∞</b> эмоций</span></div></div><div class="hero-art"><div class="orbit"></div><div class="orbit inner"></div><div class="chest"><div class="chest-glow"></div><div class="chest-lid"></div><div class="chest-body"><span class="chest-lock">✦</span></div></div><div class="coin one">✦</div><div class="coin two">♛</div><div class="coin three">◈</div><div class="sticker">✦ LEGENDARY<br><b>DROP</b></div></div><div class="hero-dots"><i></i><i></i><i></i></div></section><section class="stats"><div class="stat"><span class="stat-icon">◇</span><span><small>ПРЕДМЕТОВ В БАЗЕ</small><b>'+ITEMS.length+' <em>+ новые</em></b></span></div><div class="stat"><span class="stat-icon">♙</span><span><small>ИГРОКОВ СЕЙЧАС</small><b>'+((state.adminData.overview&&state.adminData.overview.users)||"—")+' <em class="green">● онлайн</em></b></span></div><div class="stat"><span class="stat-icon">♨</span><span><small>ДРОПНУТО СЕГОДНЯ</small><b>'+state.live.length+' <em>предметов</em></b></span></div></section><section id="catalog">'+sectionHeading("⚡ ВЫБИРАЙ И ОТКРЫВАЙ","Ивентовые <span>/</span> риск-кейсы",'<button class="link" data-action="catalog">Все кейсы　➜</button>')+'<div class="risk-panel"><div class="risk-intro"><span class="risk-icon">ϟ</span><span><b>Риск — это выбор</b><small>Меняй уровень. Меняй правила.</small></span></div><div class="risk-controls">'+levels.map(function(level){return '<button data-action="risk" data-risk="'+level+'" class="'+(state.risk===level?"selected":"")+'"><b>'+level+'</b><small>'+({L:"LOW",M:"MEDIUM",H:"HIGH",E:"EXTREME"})[level]+'</small></button>';}).join("")+'</div><div class="odds"><small>ШАНС ОКУПИТЬСЯ</small><b>'+({L:42,M:28,H:16,E:8})[state.risk]+'%</b></div></div><div class="case-grid single">'+caseCard(riskCase)+'</div>'+sectionHeading("✦ ВЫБОР СООБЩЕСТВА","Популярные <span>кейсы</span>",'<button class="link" data-action="catalog">Смотреть все　➜</button>')+'<div class="case-grid">'+popular.map(caseCard).join("")+'</div><div class="category">'+sectionHeading("♛ ТОЛЬКО ЛЕГЕНДЫ","Arcana <span>&</span> Immortal",'<span class="link">● Шанс на редкий дроп</span>')+'<div class="case-grid">'+featured.map(caseCard).join("")+'</div></div></section></div>';
-    }
-    function itemCard(item) {
-      return '<div class="item-card '+item.rarity+'">'+itemArt(item)+'<span class="item-rarity">'+RARITY_LABEL[item.rarity]+'</span><b class="item-name">'+escapeHtml(item.name)+'</b><span class="item-hero">'+escapeHtml(item.hero)+'</span><strong class="item-value">'+money(item.price)+'</strong></div>';
-    }
-    function winModal() {
-      if(!state.winnings||state.rolling)return "";
-      var total=state.winnings.reduce(function(sum,item){return sum+item.price;},0);
-      var epic=state.winnings.some(function(item){return item.rarity==="immortal"||item.rarity==="arcana";});
-      return '<div class="modal-bg"><section class="modal win-modal '+(epic?"epic":"")+'" role="dialog" aria-modal="true" aria-labelledby="win-title"><button class="modal-x" data-action="claim" aria-label="Закрыть">×</button><div class="eyebrow">✦ ПОЗДРАВЛЯЕМ!</div><h2 id="win-title">'+(state.winnings.length>1?"Твой дроп":"Это твой дроп!")+'</h2><p>Предметы уже ждут тебя в инвентаре.</p><div class="wins">'+state.winnings.map(function(item){return '<div class="win-item '+escapeHtml(item.rarity)+'">'+itemArt(item)+'<b>'+escapeHtml(item.name)+'</b><span>'+escapeHtml(RARITY_LABEL[item.rarity]||item.rarity)+'</span><strong>'+money(item.price)+'</strong></div>';}).join("")+'</div><div class="modal-actions"><button class="secondary" data-action="claim">▧ Забрать в инвентарь</button><button class="primary" data-action="sell-winnings">◉ Продать за '+money(total)+'</button></div></section></div>';
-    }
-    function renderCase() {
-      var item=getCase(state.caseId);
-      var price=item.id==="risk"?RISK_PRICES[state.risk]:item.price;
-      var pool=item.items.map(getItem).sort(function(a,b){return b.price-a.price;});
-      var reel=state.rolling||state.winnings?state.reel:pool.slice(0,Math.min(11,pool.length)).concat(pool.slice(0,Math.max(0,11-pool.length)));
-      var levels=["L","M","H","E"];
-      var selected=state.rolling?state.reel:reel;
-      var cards=selected.map(function(entry){
-        return '<div class="roulette-item '+escapeHtml(entry.rarity)+'">'+itemArt(entry)+'<span>'+escapeHtml(entry.name)+'</span><b>'+money(entry.price)+'</b></div>';
-      }).join("");
-      return '<div class="wrap main"><button class="back" data-action="back">← Все кейсы</button><div class="opening-head"><div><span class="eyebrow">✦ CASE OPENING</span><h1>'+escapeHtml(item.name)+'</h1><p>'+escapeHtml(item.desc)+'</p></div><div class="price-head">'+money(price)+'<small>ЗА ОДИН КЕЙС</small></div></div>'+
-        (item.id==="risk"?'<div class="risk-mini">'+levels.map(function(level){return '<button data-action="risk" data-risk="'+level+'" class="'+(state.risk===level?"selected":"")+'"><b>'+level+'</b><span>'+money(RISK_PRICES[level])+'</span></button>';}).join("")+'</div>':'')+
-        '<section class="roulette '+(state.rolling&&!state.fast?"rolling":"")+' '+(state.winnings?"stopped":"")+'"><div class="roulette-top"><span>'+(state.rolling?"● ОПРЕДЕЛЯЕМ ДРОП...":"● ГОТОВ К ОТКРЫТИЮ")+'</span><span>FAIR PLAY　ⓘ</span></div><span class="pointer"></span><div class="roulette-window"><div class="roulette-track" style="transform:translate3d(-'+Number(state.rouletteOffset||0)+'px,0,0)">'+cards+'</div></div>'+
-        '<div class="roulette-controls"><div class="quantity"><small>КОЛИЧЕСТВО</small><div class="quantity-buttons">'+[1,2,3,4].map(function(count){return '<button data-action="quantity" data-value="'+count+'" class="'+(state.quantity===count?"selected":"")+'">x'+count+'</button>';}).join("")+'</div></div><button class="fast-toggle '+(state.fast?"on":"")+'" data-action="fast"><span class="toggle"><i></i></span>Быстрое открытие</button><button class="open-button" data-action="open" '+(state.rolling?"disabled":"")+'>▣ Открыть за '+money(price*state.quantity)+'　➜</button></div>'+
-        '<div class="balance-note">◉ Ваш баланс: '+money(state.balance)+'　·　<b>Шансы одинаковы при любом количестве</b></div></section><section class="contents">'+sectionHeading("▧ ЧТО ВНУТРИ","Содержимое кейса <span>("+pool.length+")</span>",'<span class="link">Сортировка: редкость　⌄</span>')+'<div class="items-grid">'+pool.map(itemCard).join("")+'</div></section></div>'+winModal();
-    }
-    function inventoryValue() {
-      return state.inventory.reduce(function(sum,entry){return sum+getItem(entry.itemId).price;},0);
-    }
-    function sourcePrice() {
-      if(state.upgradeMode==="balance")return Math.max(0,Number(state.stake)||0);
-      var entry=state.inventory.filter(function(record){return record.uid===state.sourceUid;})[0];
-      return entry?getItem(entry.itemId).price:0;
-    }
-    function targetCandidates() {
-      var value=sourcePrice();
-      return ITEMS.filter(function(item){return item.price>value;}).sort(function(a,b){return a.price-b.price;});
-    }
-    function currentTarget() {
-      var candidates=targetCandidates();
-      for(var i=0;i<candidates.length;i++)if(candidates[i].id===state.targetId)return candidates[i];
-      return candidates[0]||getItem(state.targetId);
-    }
-    function upgradeChance() {
-      var value=sourcePrice(),target=currentTarget();
-      return value>0&&target.price>value?Math.max(1,Math.min(75,Math.floor(value/target.price*75))):0;
-    }
-    function renderUpgrade() {
-      var candidateList=targetCandidates(),target=currentTarget(),chance=upgradeChance();
-      var source=state.inventory.filter(function(entry){return entry.uid===state.sourceUid;})[0];
-      var sourceItems=state.inventory.map(function(entry){
-        var item=getItem(entry.itemId);
-        return '<button class="source-item '+(state.sourceUid===entry.uid?"selected":"")+'" data-action="source" data-uid="'+escapeHtml(entry.uid)+'">'+itemArt(item)+'<span>'+escapeHtml(item.name)+'</span><strong>'+money(item.price)+'</strong></button>';
-      }).join("");
-      return '<div class="wrap main"><div class="page-title"><div><span class="eyebrow">↗ RISK IT. UPGRADE IT.</span><h1>Апгрейд <span>предметов</span></h1><p>Ставь скин или баланс — забирай желанный предмет.</p></div><small class="help-text">ⓘ Успех — новый предмет. Неудача — ставка сгорает.</small></div><section class="upgrade-grid"><div class="upgrade-side"><div class="side-head"><span>01　<b>СТАВКА</b></span><span class="green">'+state.inventory.length+' предметов</span></div><div class="source-tabs"><button data-action="upgrade-mode" data-mode="item" class="'+(state.upgradeMode==="item"?"selected":"")+'">▧ Предмет</button><button data-action="upgrade-mode" data-mode="balance" class="'+(state.upgradeMode==="balance"?"selected":"")+'">◉ Баланс</button></div>'+(state.upgradeMode==="item"?(sourceItems||'<div class="empty"><b>Инвентарь пуст</b><span>Открой кейс, чтобы получить предмет.</span></div>'):'<div class="stake-box"><label for="stake">Сумма ставки</label><input id="stake" data-action="stake" type="number" min="1" max="'+state.balance+'" value="'+escapeHtml(state.stake)+'"><input data-action="stake-range" type="range" min="1" max="'+Math.max(1,state.balance)+'" value="'+Math.min(Math.max(1,Number(state.stake)||1),Math.max(1,state.balance))+'"><small>Доступно: '+money(state.balance)+'</small></div>')+'<div class="selected-value"><span>Ваша ставка</span><b>'+money(sourcePrice())+'</b></div></div><div class="upgrade-center"><div class="chance" style="--angle:'+chance*3.6+'deg"><div><small>ШАНС УСПЕХА</small><b>'+chance+'<i>%</i></b></div><span class="chance-pointer '+(state.rolling?"spin":"")+'"></span></div><div class="upgrade-arrows">⟵　➜　⟶</div><button class="upgrade-button" data-action="upgrade" '+(!chance||state.rolling?"disabled":"")+'>'+(state.rolling?"Проверяем шанс...":"↗ Апгрейд")+'</button><div class="chance-hint">Успех: '+chance+'%　·　Сгорание: '+(chance?100-chance:0)+'%</div></div><div class="upgrade-side"><div class="side-head"><span>02　<b>ЖЕЛАННЫЙ ПРЕДМЕТ</b></span><span class="gold">28 предметов</span></div><div class="target-preview '+target.rarity+'">'+itemArt(target)+'<span>'+RARITY_LABEL[target.rarity]+'</span><b>'+escapeHtml(target.name)+'</b><small>'+escapeHtml(target.hero)+'</small><strong>'+money(target.price)+'</strong></div><label class="target-select">Предмет<select data-action="target">'+candidateList.map(function(item){return '<option value="'+item.id+'" '+(item.id===target.id?"selected":"")+'>'+escapeHtml(item.name)+' — '+money(item.price)+'</option>';}).join("")+'</select></label><div class="quick-targets">'+candidateList.slice(0,4).map(function(item){return '<button data-action="target-button" data-id="'+item.id+'" class="'+(item.id===target.id?"selected":"")+'">'+escapeHtml(item.icon)+'<small>'+money(item.price)+'</small></button>';}).join("")+'</div></div></section><p class="help-text">◇ Все результаты случайны. Шанс отображается до нажатия кнопки и не меняется.</p></div>';
-    }
-    function renderContracts() {
-      var chosen=state.inventory.slice(0,3);
-      var slots=[0,1,2].map(function(index){
-        var entry=chosen[index],item=entry?getItem(entry.itemId):null;
-        return '<div class="slot '+(item?"filled":"")+'">'+(item?itemArt(item)+'<b>'+escapeHtml(item.name)+'</b><span>'+money(item.price)+'</span>':'＋<span>СЛОТ '+(index+1)+'</span>')+'</div>';
-      }).join("");
-      var value=chosen.reduce(function(sum,entry){return sum+getItem(entry.itemId).price;},0);
-      return '<div class="wrap main"><div class="page-title"><div><span class="eyebrow">⚔ TRADE UP</span><h1>Контракты <span>обмена</span></h1><p>Объедини три предмета и получи один новый.</p></div></div><section class="contract-panel"><div class="contract-copy"><span class="contract-icon">⚔</span><span class="eyebrow">TRADE-UP CONTRACT</span><h2>Три предмета.<br><span>Один новый шанс.</span></h2><p>Три первых предмета инвентаря обмениваются на один новый. Их стоимость определяет диапазон дропа.</p><div class="contract-stat"><span>Предметов в инвентаре</span><b>'+state.inventory.length+' / 3</b></div><div class="contract-stat"><span>Стоимость обмена</span><b>'+money(value)+'</b></div><button class="primary" data-action="craft">⚔ Создать контракт　➜</button>'+(state.contractNotice?'<div class="notice">'+escapeHtml(state.contractNotice)+'</div>':'')+'</div><div class="contract-slots">'+slots+'<div class="result-slot">✦<b>?</b><span>НОВЫЙ ПРЕДМЕТ</span></div></div></section><p class="help-text">ⓘ Контракт использует первые три предмета инвентаря. После обмена вернуть предметы нельзя.</p></div>';
-    }
-    function renderBonuses() {
-      return '<div class="wrap main"><div class="page-title"><div><span class="eyebrow">✦ DAILY REWARDS</span><h1>Бонусы <span>и награды</span></h1><p>Забирай виртуальные бонусы и открывай больше кейсов.</p></div></div><section class="bonus-hero"><div class="gift-art">♙</div><div><span class="eyebrow">WELCOME BONUS</span><h2>Больше дропа.<br><span>Больше поводов зайти.</span></h2><p>Добавь демо-монеты на баланс.<br>Никаких платежей — только игра.</p><button class="primary" data-action="bonus">＋ Забрать +500 ₽</button></div><strong class="bonus-amount">+500 ₽</strong></section><div class="bonus-grid"><article class="bonus-card"><span class="eyebrow">✦ КАЖДЫЙ ДЕНЬ</span><h3>Демо-подарок</h3><p>Попробуй кейсы с дополнительным балансом.</p><button data-action="bonus">Забрать +500 ₽　➜</button></article><article class="bonus-card"><span class="eyebrow">ϟ БЕЗ ОГРАНИЧЕНИЙ</span><h3>Тестируй механику</h3><p>Демо-пополнение всегда доступно в шапке сайта.</p><button data-action="bonus">Пополнить　➜</button></article><article class="bonus-card"><span class="eyebrow">◇ ЧЕСТНЫЕ ПРАВИЛА</span><h3>Без реальных денег</h3><p>Виртуальный баланс хранится в аккаунте и не имеет стоимости.</p><button data-action="help">Как это работает　➜</button></article></div></div>';
-    }
-    function renderProfile() {
-      var filters=["Все предметы","Arcana","Immortal","Остальные"];
-      var selected=state.inventory.filter(function(entry){
-        var rarity=entry.rarity||getItem(entry.itemId).rarity;
-        return state.filter==="Все предметы"||(state.filter==="Arcana"&&rarity==="arcana")||(state.filter==="Immortal"&&rarity==="immortal")||(state.filter==="Остальные"&&rarity!=="arcana"&&rarity!=="immortal");
-      });
-      var owned=selected.map(function(entry){
-        var item=entry.name?entry:getItem(entry.itemId);
-        return '<article class="owned '+item.rarity+'">'+itemArt(item)+'<span class="item-rarity">'+RARITY_LABEL[item.rarity]+'</span><b class="item-name">'+escapeHtml(item.name)+'</b><span class="item-hero">'+escapeHtml(item.hero)+'</span><strong class="item-value">'+money(item.price)+'</strong><button data-action="sell-item" data-uid="'+escapeHtml(entry.uid)+'">◉ Продать</button></article>';
-      }).join("");
-      return '<div class="wrap main"><section class="profile-head"><div class="profile-user"><span class="profile-avatar">'+escapeHtml(state.nickname.charAt(0).toUpperCase())+'</span><div><span class="eyebrow">ЛИЧНЫЙ КАБИНЕТ</span><h1>'+escapeHtml(state.nickname)+'</h1><span class="profile-sub">◇ Участник NEONDROP</span></div></div><button class="demo-button profile-add" data-action="profile-bonus">＋ Пополнить демо-баланс <strong>+5000 ₽</strong></button></section><div class="profile-stats"><div class="profile-stat"><i>▧</i><small>ОТКРЫТО КЕЙСОВ</small><b>'+state.opened+'</b></div><div class="profile-stat"><i class="gold">♛</i><small>ЛУЧШИЙ ДРОП</small><b>'+money(state.bestDrop)+'</b></div><div class="profile-stat"><i class="'+(state.profit>=0?"green":"red")+'">◉</i><small>ОБЩИЙ ПРОФИТ</small><b class="'+(state.profit>=0?"green":"red")+'">'+money(state.profit)+'</b></div><div class="profile-stat"><i>▣</i><small>ИНВЕНТАРЬ</small><b>'+money(inventoryValue())+'</b></div></div><section class="profile-card"><span class="eyebrow">♙ ПРОФИЛЬ</span><h2>Настройки аккаунта</h2><div class="nickname"><input data-action="nickname" aria-label="Никнейм" maxlength="18" value="'+escapeHtml(state.nickname)+'"><button data-action="save-name">Сохранить</button></div></section><section class="profile-card"><span class="eyebrow">✦ ПРОМОКОД</span><div class="promo-entry"><input type="text" id="promo-code" maxlength="32" placeholder="Введите промокод"><button data-action="redeem-promo">Активировать</button></div></section><section>'+sectionHeading("▧ YOUR COLLECTION","Инвентарь <span>("+state.inventory.length+")</span>",state.inventory.length?'<button class="sell-all" data-action="sell-all">◉ Продать всё за '+money(inventoryValue())+'</button>':'')+'<div class="inventory-toolbar"><div class="filters">'+filters.map(function(filter){return '<button data-action="filter" data-filter="'+filter+'" class="'+(state.filter===filter?"selected":"")+'">'+filter+'</button>';}).join("")+'</div><span class="help-text">◷ Новые сначала</span></div>'+(owned?'<div class="items-grid">'+owned+'</div>':'<div class="empty-inventory"><b>'+(state.inventory.length?"В этой категории пока пусто":"Инвентарь пока пуст")+'</b><span>Открой кейс и забери свой первый дроп.</span></div>')+'</section></div>';
-    }
-    function authModal() {
-      if(!state.authDialog)return "";
-      var signup=state.authDialog==="signup";
-      return '<div class="modal-bg"><section class="modal auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title"><button class="modal-x" data-action="auth-close" aria-label="Закрыть">×</button><span class="eyebrow">NEONDROP ACCOUNT</span><h2 id="auth-title">'+(signup?"Создать аккаунт":"Войти в аккаунт")+'</h2><form class="auth-form" data-form="auth">'+(signup?'<label>Никнейм<input name="username" required minlength="2" maxlength="18" autocomplete="nickname" placeholder="Ваш ник"></label>':'')+'<label>Email<input name="email" type="email" required autocomplete="email" placeholder="name@example.com"></label><label>Пароль<input name="password" type="password" required minlength="6" autocomplete="'+(signup?"new-password":"current-password")+'" placeholder="Не менее 6 символов"></label><button class="primary" type="submit">'+(signup?"Зарегистрироваться":"Войти")+'</button></form><div class="auth-switch">'+(signup?'Уже есть аккаунт? <button data-action="auth-open" data-mode="login">Войти</button>':'Нет аккаунта? <button data-action="auth-open" data-mode="signup">Регистрация</button>')+'</div></section></div>';
-    }
-    function adminTabs() {
-      var tabs=[["dashboard","Аналитика"],["cases","Конструктор кейсов"],["skins","База предметов"],["users","Игроки"],["settings","Настройки"],["promos","Промокоды"]];
-      return '<div class="admin-tabs">'+tabs.map(function(tab){return '<button data-action="admin-tab" data-tab="'+tab[0]+'" class="'+(state.adminTab===tab[0]?"selected":"")+'">'+tab[1]+'</button>';}).join("")+'</div>';
-    }
-    function renderAdminDashboard() {
-      var data=state.adminData.overview||{},rows=data.drops||[];
-      return '<div class="admin-grid"><div class="admin-stat"><small>ИГРОКОВ</small><b data-stat="users">'+Number(data.users||0).toLocaleString("ru-RU")+'</b></div><div class="admin-stat"><small>ОТКРЫТИЙ</small><b data-stat="opens">'+Number(data.opens||0).toLocaleString("ru-RU")+'</b></div><div class="admin-stat"><small>ПОТРАЧЕНО</small><b data-stat="spent">'+money(data.spent||0)+'</b></div><div class="admin-stat"><small>ВЫДАНО / ПРОФИТ</small><b data-stat="payout">'+money(data.payout||0)+' / '+money(data.profit||0)+'</b></div></div><section class="admin-panel"><h2>Последние открытия</h2><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Игрок</th><th>Кейс</th><th>Предмет</th><th>Редкость</th><th>Цена</th><th>Время</th></tr></thead><tbody id="admin-drop-rows">'+renderAdminDropRows(rows)+'</tbody></table></div></section>';
-    }
-    function renderAdminDropRows(rows) {
-      return (rows||[]).map(function(row){return '<tr><td>'+escapeHtml(row.username)+'</td><td>'+escapeHtml(row.case_name)+'</td><td>'+escapeHtml(row.skin_name)+'</td><td>'+escapeHtml(RARITY_LABEL[row.skin_rarity]||row.skin_rarity)+'</td><td>'+money(row.skin_price)+'</td><td>'+new Date(row.created_at).toLocaleString("ru-RU")+'</td></tr>';}).join("");
-    }
-    function refreshAdminDashboard() {
-      if(state.adminPolling)return Promise.resolve();
-      state.adminPolling=true;
-      return rpc("admin_overview").then(function(data){
-        state.adminData.overview=data;
-        var users=document.querySelector('[data-stat="users"]'),opens=document.querySelector('[data-stat="opens"]'),
-          spent=document.querySelector('[data-stat="spent"]'),payout=document.querySelector('[data-stat="payout"]'),
-          rows=document.getElementById("admin-drop-rows");
-        if(users)users.textContent=Number(data.users||0).toLocaleString("ru-RU");
-        if(opens)opens.textContent=Number(data.opens||0).toLocaleString("ru-RU");
-        if(spent)spent.textContent=money(data.spent||0);
-        if(payout)payout.textContent=money(data.payout||0)+" / "+money(data.profit||0);
-        if(rows)rows.innerHTML=renderAdminDropRows(data.drops||[]);
-      }).catch(function(error){console.error(error);}).finally(function(){state.adminPolling=false;});
-    }
-    function renderAdminCases() {
-      var cases=state.dbCases||[],item=state.adminCase;
-      var list='<div class="admin-cases">'+cases.map(function(entry){return '<div class="admin-case"><b>'+escapeHtml(entry.name)+'</b><small>'+money(entry.price)+' · '+escapeHtml(entry.category)+' · '+(entry.items||[]).length+' предметов</small><div class="admin-actions"><button class="admin-button-small" data-action="admin-edit-case" data-id="'+escapeHtml(entry.id)+'">Изменить</button>'+(entry.id==="risk"?"":'<button class="admin-button-small danger" data-action="admin-delete-case" data-id="'+escapeHtml(entry.id)+'">Удалить</button>')+'</div></div>';}).join("")+'</div>';
-      if(!item)return '<section class="admin-panel"><div class="admin-actions"><h2 style="margin-right:auto">Кейсы</h2><button class="primary" data-action="admin-new-case">＋ Новый кейс</button></div>'+list+'</section>';
-      var contents=(item.items||[]).map(function(skin){return {skin_id:skin.id,chance:Number(skin.chance)||1};});
-      return '<section class="admin-panel"><div class="admin-actions"><h2 style="margin-right:auto">'+(item.isNew?"Новый кейс":"Редактирование кейса")+'</h2><button class="admin-button-small" data-action="admin-case-cancel">Закрыть</button></div><div class="admin-form"><label class="field-label">ID<input id="admin-case-id" value="'+escapeHtml(item.id||"")+'" '+(item.isNew?"":"readonly")+' placeholder="my-case"></label><label class="field-label">Название<input id="admin-case-name" maxlength="80" value="'+escapeHtml(item.name||"")+'"></label><label class="field-label">Цена, ₽'+(item.id==="risk"?" (цена задается уровнем риска)":"")+'<input id="admin-case-price" type="number" min="1" value="'+escapeHtml(item.price||99)+'" '+(item.id==="risk"?"disabled":"")+'></label><label class="field-label">Категория<select id="admin-case-category">'+[["popular","Популярные"],["risk","Риск"],["arcana","Arcana / Immortal"],["event","Ивентовые"]].map(function(option){return '<option value="'+option[0]+'" '+((item.category||"popular")===option[0]?"selected":"")+'>'+option[1]+'</option>';}).join("")+'</select></label><label class="field-label">Бейдж<input id="admin-case-badge" value="'+escapeHtml(item.badge||"")+'"></label><label class="field-label">Иконка<input id="admin-case-icon" value="'+escapeHtml(item.icon||"✦")+'"></label><label class="field-label">Тема CSS<input id="admin-case-theme" value="'+escapeHtml(item.theme||"violet")+'"></label><label class="field-label">Порядок<input id="admin-case-order" type="number" value="'+escapeHtml(item.sort_order||0)+'"></label><label class="field-label wide">Описание<input id="admin-case-description" value="'+escapeHtml(item.description||"")+'"></label><label class="field-label wide">Предметы и веса (JSON, шанс используется как вес)<textarea id="admin-case-items">'+escapeHtml(JSON.stringify(contents,null,2))+'</textarea></label><div class="admin-actions wide"><button class="primary" data-action="admin-save-case">Сохранить кейс</button></div></div>'+list+'</section>';
-    }
-    function renderAdminUsers() {
-      var users=state.adminData.users||[];
-      return '<section class="admin-panel"><h2>Игроки и баланс</h2><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Игрок / email</th><th>Баланс</th><th>Инвентарь</th><th>Изменить баланс</th><th>Выдать скин</th><th>Доступ</th></tr></thead><tbody>'+users.map(function(user){return '<tr><td>'+escapeHtml(user.username)+'<br><small>'+escapeHtml(user.email||"")+'</small></td><td>'+money(user.balance)+'</td><td>'+user.inventory_count+'</td><td><input type="number" min="0" data-balance-user="'+user.id+'" value="'+user.balance+'"><button class="admin-button-small" data-action="admin-set-balance" data-id="'+user.id+'">Сохранить</button></td><td><select data-skin-user="'+user.id+'">'+ITEMS.map(function(skin){return '<option value="'+skin.id+'">'+escapeHtml(skin.name)+'</option>';}).join("")+'</select><button class="admin-button-small" data-action="admin-grant-skin" data-id="'+user.id+'">Выдать</button></td><td><button class="admin-button-small '+(user.is_banned?"danger":"")+'" data-action="admin-ban" data-id="'+user.id+'" data-banned="'+user.is_banned+'">'+(user.is_banned?"Разбан":"Бан")+'</button></td></tr>';}).join("")+'</tbody></table></div></section>';
-    }
-    function renderAdminSkins() {
-      var skins=state.adminData.skins||[];
-      var rows=skins.map(function(item){
-        return '<tr><td>'+itemArt(item)+'</td><td>'+escapeHtml(item.name)+'</td><td>'+escapeHtml(item.hero)+'</td><td><span class="item-rarity '+escapeHtml(item.rarity)+'">'+escapeHtml(RARITY_LABEL[item.rarity]||item.rarity)+'</span></td><td>'+money(item.price)+'</td><td><code>'+escapeHtml(item.id)+'</code></td></tr>';
-      }).join("");
-      return '<section class="admin-panel"><div class="admin-actions"><h2 style="margin-right:auto">База предметов</h2><b>'+skins.length+' скинов</b></div><p class="admin-skins-hint">Вставьте JSON-массив объектов с полями <code>id</code>, <code>name</code>, <code>hero</code>, <code>price</code>, <code>rarity</code> и необязательным <code>icon</code>. Разрешённые редкости: common, uncommon, rare, mythical, legendary, immortal, arcana. Существующие ID не перезаписываются.</p><div class="admin-form"><label class="field-label wide">JSON<textarea id="admin-skins-json" class="admin-skins-json" spellcheck="false" placeholder=\'[{"id":"new-item","name":"Item name","hero":"Hero","price":250,"rarity":"rare","icon":"✦"}]\'></textarea></label><div class="admin-actions wide"><button class="primary" data-action="admin-import-skins">Массовый импорт JSON</button></div></div></section><section class="admin-panel"><h2>Предметы и виртуальные цены</h2><div class="admin-table-wrap skin-list"><table class="admin-table skin-table"><thead><tr><th>SVG</th><th>Предмет</th><th>Герой</th><th>Редкость</th><th>Цена</th><th>ID</th></tr></thead><tbody>'+rows+'</tbody></table></div></section>';
-    }
-    function renderAdminSettings() {
-      var item=state.adminData.settings||{rtp_multiplier:1,streamer_mode:false,banner_title:"Твой следующий дроп уже близко.",live_drop_speed:5};
-      return '<section class="admin-panel"><h2>Подкрутка и настройки</h2><div class="admin-form"><label class="field-label wide">RTP-множитель <b id="rtp-value">'+Math.round(Number(item.rtp_multiplier)*100)+'%</b><input id="admin-rtp" type="range" min="10" max="200" value="'+Math.round(Number(item.rtp_multiplier)*100)+'"></label><label class="field-label wide"><span><input id="admin-streamer" type="checkbox" '+(item.streamer_mode?"checked":"")+'> Streamer mode: администратору выпадает самый дорогой предмет кейса</span></label><label class="field-label wide">Текст главного баннера<input id="admin-banner" maxlength="120" value="'+escapeHtml(item.banner_title||"")+'"></label><label class="field-label">Скорость обновления ленты, секунд<input id="admin-speed" type="number" min="1" max="30" value="'+Number(item.live_drop_speed||5)+'"></label><div class="admin-actions wide"><button class="primary" data-action="admin-save-settings">Сохранить настройки</button></div></div></section>';
-    }
-    function renderAdminPromos() {
-      var list=state.adminData.promos||[];
-      return '<section class="admin-panel"><h2>Создать промокод</h2><div class="promo-entry"><input type="text" id="admin-promo-code" maxlength="32" placeholder="NEON2026"><input type="number" id="admin-promo-reward" min="1" placeholder="Награда ₽"><input type="number" id="admin-promo-limit" min="1" placeholder="Активаций"><button data-action="admin-save-promo">Создать</button></div></section><section class="admin-panel"><h2>Промокоды</h2><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Код</th><th>Награда</th><th>Осталось</th><th></th></tr></thead><tbody>'+list.map(function(promo){return '<tr><td>'+escapeHtml(promo.code)+'</td><td>'+money(promo.reward)+'</td><td>'+promo.activations_left+'</td><td><button class="admin-button-small danger" data-action="admin-delete-promo" data-id="'+promo.id+'">Удалить</button></td></tr>';}).join("")+'</tbody></table></div></section>';
-    }
-    function renderAdmin() {
-      if(!state.user||state.role!=="admin")return '<div class="wrap main"><section class="admin-panel"><h2>Доступ запрещён</h2></section></div>';
-      var content=state.adminTab==="dashboard"?renderAdminDashboard():state.adminTab==="cases"?renderAdminCases():state.adminTab==="skins"?renderAdminSkins():state.adminTab==="users"?renderAdminUsers():state.adminTab==="settings"?renderAdminSettings():renderAdminPromos();
-      return '<div class="admin-main"><div class="admin-head"><div><h1>Админ-панель</h1><p>Все изменения подтверждаются серверными RPC и проверкой роли в базе.</p></div><button class="admin-button-small" data-action="admin-refresh">⟳ Обновить</button></div>'+adminTabs()+content+'</div>';
-    }
-    function loadAdminTab(tab) {
-      if(!state.user||state.role!=="admin")return Promise.reject(new Error("Недостаточно прав"));
-      state.adminTab=tab||state.adminTab;
-      var request=state.adminTab==="dashboard"?rpc("admin_overview").then(function(data){state.adminData.overview=data;}):
-        state.adminTab==="users"?rpc("admin_list_users").then(function(data){state.adminData.users=data;}):
-        state.adminTab==="skins"?rpc("admin_list_skins").then(function(data){state.adminData.skins=data;}):
-        state.adminTab==="settings"?rpc("admin_get_settings").then(function(data){state.adminData.settings=data;}):
-        state.adminTab==="promos"?rpc("admin_list_promocodes").then(function(data){state.adminData.promos=data;}):
-        refreshPublic();
-      return request.then(function(){render();});
-    }
-    function saveAdminCase() {
-      var items=JSON.parse(document.getElementById("admin-case-items").value);
-      var record={id:document.getElementById("admin-case-id").value.trim(),name:document.getElementById("admin-case-name").value.trim(),
-        price:Number(document.getElementById("admin-case-price").value),category:document.getElementById("admin-case-category").value,
-        badge:document.getElementById("admin-case-badge").value,icon:document.getElementById("admin-case-icon").value,
-        theme:document.getElementById("admin-case-theme").value,description:document.getElementById("admin-case-description").value,
-        sort_order:Number(document.getElementById("admin-case-order").value)||0};
-      return rpc("admin_save_case",{p_case:record,p_items:items}).then(function(){
-        state.adminCase=null;setToast("Кейс сохранён");return refreshPublic();
-      }).then(function(){return loadAdminTab("cases");});
-    }
-    function adminImportSkins() {
-      var input=document.getElementById("admin-skins-json"),items;
-      try{items=JSON.parse(input?input.value:"");}catch(error){setToast("Ошибка JSON: "+error.message);return Promise.resolve();}
-      if(!Array.isArray(items)){setToast("Ожидается JSON-массив предметов");return Promise.resolve();}
-      return rpc("admin_import_skins",{p_skins:items}).then(function(result){
-        return refreshPublic().then(function(){return loadAdminTab("skins");}).then(function(){
-          setToast("Импорт завершён: добавлено "+result.inserted+" из "+result.received);
-        });
-      });
-    }
-    function render() {
-      var content=state.page==="admin"?renderAdmin():state.caseId?renderCase():state.page==="cases"?renderCases():state.page==="upgrade"?renderUpgrade():state.page==="contracts"?renderContracts():state.page==="bonuses"?renderBonuses():renderProfile();
-      root.innerHTML='<div class="shell">'+header()+'<section class="wrap live"><span class="live-label"><i></i> LIVE DROP</span><div class="live-list" id="live-list">'+state.live.map(liveCard).join("")+'</div><button class="arrow" data-action="catalog" aria-label="Каталог">➜</button></section><main>'+content+'</main>'+footer()+(state.toast?'<div class="toast">'+escapeHtml(state.toast)+'</div>':'')+authModal()+'</div>';
-      var targetCount=document.querySelector(".side-head .gold");
-      if(targetCount)targetCount.textContent=ITEMS.length+" предметов";
-      updateCountdown();
-    }
-    function updateCountdown() {
-      var countdown=document.getElementById("countdown");
-      if(!countdown)return;
-      var now=Date.now();
-      if(!state.eventDeadline)state.eventDeadline=now+23*24*60*60*1000;
-      var remaining=Math.max(0,Math.floor((state.eventDeadline-now)/1000));
-      var days=Math.floor(remaining/86400),hours=Math.floor((remaining%86400)/3600),minutes=Math.floor((remaining%3600)/60),seconds=remaining%60;
-      function pad(value){return value<10?"0"+value:String(value);}
-      countdown.textContent=days+" ДН. "+pad(hours)+":"+pad(minutes)+":"+pad(seconds);
-    }
-    function startOpen() {
-      if(state.rolling||!state.caseId)return;
-      if(!state.user){state.authDialog="login";render();setToast("Войдите, чтобы открывать кейсы");return;}
-      if(state.isBanned){setToast("Аккаунт заблокирован");return;}
-      var current=getCase(state.caseId);
-      return rpc("open_case",{p_case_id:current.id,p_quantity:state.quantity,p_risk_level:state.risk}).then(function(result){
-        state.balance=Number(result.balance)||0;
-        state.winnings=(result.drops||[]).map(function(drop){return {id:drop.id,name:drop.name,hero:drop.hero,price:Number(drop.price),rarity:drop.rarity,icon:drop.icon};});
-        state.winningIds=result.inventory_ids||[];
-        state.reel=[];
-        for(var i=0;i<30;i++)state.reel.push(getItem(current.items[Math.floor(Math.random()*current.items.length)]));
-        state.reel[10]=state.winnings[0];
-        state.rouletteOffset=0;
-        state.rolling=true;render();
-        animateRoulette();
-        refreshProfile().catch(function(error){console.error(error);});
-        refreshPublic().catch(function(error){console.error(error);});
-      });
-    }
-    function animateRoulette() {
-      var track=document.querySelector(".roulette-track"),viewport=document.querySelector(".roulette-window");
-      if(!track||!viewport||!track.children.length){
-        state.rolling=false;render();playWinSound(state.winnings||[]);return;
-      }
-      var cards=Array.prototype.map.call(track.children,function(card){
-        var rect=card.getBoundingClientRect();
-        return rect.left+rect.width/2;
-      });
-      var winningIndex=Math.min(10,cards.length-1),pointer=viewport.getBoundingClientRect();
-      var pointerCenter=pointer.left+pointer.width/2,distance=Math.max(0,cards[winningIndex]-pointerCenter);
-      var nearest=function(offset){
-        var result=0,delta=Infinity;
-        for(var i=0;i<cards.length;i++){
-          var current=Math.abs(cards[i]-offset-pointerCenter);
-          if(current<delta){delta=current;result=i;}
-        }
-        return result;
-      };
-      var previous=nearest(0),start=0;
-      var reduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      var duration=reduced?400:(state.fast?620:2750);
-      function frame(now) {
-        if(!start)start=now;
-        var progress=Math.min(1,(now-start)/duration),eased=1-Math.pow(1-progress,4),offset=distance*eased;
-        track.style.transform="translate3d("+(-offset)+"px,0,0)";
-        var current=nearest(offset);
-        if(current>previous){
-          for(var index=previous+1;index<=current;index++)playRouletteTick(progress);
-          previous=current;
-        }
-        if(progress<1){window.requestAnimationFrame(frame);return;}
-        state.rouletteOffset=Math.round(distance);
-        state.rolling=false;
-        render();
-        playWinSound(state.winnings||[]);
-      }
-      window.requestAnimationFrame(frame);
-    }
-    function finishWinnings(sell) {
-      if(!state.winnings)return;
-      var ids=state.winningIds.slice(),amount=state.winnings.reduce(function(sum,item){return sum+item.price;},0);
-      var operation=sell?rpc("sell_inventory",{p_inventory_ids:ids}):Promise.resolve(null);
-      return operation.then(function(result){
-        if(result)state.balance=Number(result.balance)||state.balance;
-        return refreshProfile();
-      }).then(function(){
-        state.winnings=null;state.winningIds=[];render();
-        setToast(sell?"Продано за "+money(amount):"Предмет уже добавлен в инвентарь");
-      });
-    }
-    function runUpgrade() {
-      var chance=upgradeChance(),target=currentTarget(),value=sourcePrice(),source=state.inventory.filter(function(entry){return entry.uid===state.sourceUid;})[0];
-      if(!chance||state.rolling)return;
-      if(!state.user){state.authDialog="login";render();setToast("Войдите, чтобы улучшать предметы");return;}
-      if(state.isBanned){setToast("Аккаунт заблокирован");return;}
-      if(state.upgradeMode==="item"&&!source){setToast("Сначала выберите предмет");return;}
-      if(state.upgradeMode==="balance"&&(value>state.balance||value<1)){setToast("Проверьте сумму ставки");return;}
-      return rpc("upgrade_item",{p_inventory_id:source?source.uid:null,p_target_skin_id:target.id,p_use_balance:state.upgradeMode==="balance",p_stake:state.upgradeMode==="balance"?value:0}).then(function(result){
-        state.rolling=true;render();
-        window.setTimeout(function(){
-          state.rolling=false;state.sourceUid=null;
-          refreshProfile().then(function(){render();setToast(result.success?"Апгрейд успешен: "+target.name:"Не повезло — ставка сгорела");}).catch(function(error){setToast(error.message);});
-        },1000);
-      });
-    }
-    function runContract() {
-      if(!state.user){state.authDialog="login";render();setToast("Войдите, чтобы создавать контракт");return;}
-      if(state.isBanned){setToast("Аккаунт заблокирован");return;}
-      return rpc("make_contract").then(function(result){
-        return refreshProfile().then(function(){state.contractNotice="Контракт готов! Получен "+result.reward.name;render();});
-      });
-    }
-    function sellItem(uid) {
-      return rpc("sell_inventory",{p_inventory_ids:[uid]}).then(function(){
-        return refreshProfile();
-      }).then(function(){render();setToast("Предмет продан");});
-    }
-    function sellAll() {
-      if(!state.inventory.length)return;
-      return rpc("sell_inventory",{p_inventory_ids:state.inventory.map(function(item){return item.uid;})}).then(function(){
-        return refreshProfile();
-      }).then(function(){render();setToast("Инвентарь продан");});
-    }
-    function navigate(page) {
-      if(state.rolling&&state.caseId){setToast("Дождитесь результата открытия кейса");return;}
-      if(page==="admin"&&state.role!=="admin"){setToast("Недостаточно прав");return;}
-      if((page==="profile"||page==="upgrade"||page==="contracts")&&!state.user){state.authDialog="login";render();setToast("Войдите, чтобы продолжить");return;}
-      state.page=page;state.caseId=null;state.winnings=null;
-      var nav=document.getElementById("main-nav");if(nav)nav.classList.remove("open");
-      render();
-      if(page==="admin")task(loadAdminTab("dashboard"));
-    }
-    function closestAction(node) {
-      while(node&&node!==document) {
-        if(node.getAttribute&&node.getAttribute("data-action"))return node;
-        node=node.parentNode;
-      }
-      return null;
-    }
-    function submitAuth(form) {
-      if(!db)return Promise.reject(new Error("Supabase JS не загружен."));
-      var values=new FormData(form),email=String(values.get("email")||"").trim().toLowerCase(),password=String(values.get("password")||"");
-      if(state.authDialog==="signup"){
-        var username=String(values.get("username")||"").trim();
-        return db.auth.signUp({email:email,password:password,options:{data:{username:username}}}).then(function(result){
-          if(result.error)throw result.error;
-          state.authDialog=null;
-          if(result.data.session){state.session=result.data.session;state.user=result.data.session.user;return refreshProfile().then(function(){render();setToast("Регистрация выполнена");});}
-          render();setToast("Аккаунт создан. Если подтверждение email включено, завершите его в письме.");
-        });
-      }
-      return db.auth.signInWithPassword({email:email,password:password}).then(function(result){
-        if(result.error)throw result.error;
-        state.authDialog=null;state.session=result.data.session;state.user=result.data.user;
-        return refreshProfile().then(function(){state.page="cases";render();setToast("Успешный вход");});
-      });
-    }
-    function signOut() {
-      return db.auth.signOut().then(function(result){
-        if(result.error)throw result.error;
-        state.user=null;state.session=null;state.role="user";state.balance=0;state.inventory=[];
-        state.page="cases";state.caseId=null;state.winnings=null;render();setToast("Вы вышли из аккаунта");
-      });
-    }
-    function redeemPromo() {
-      var input=document.getElementById("promo-code"),code=input?input.value.trim():"";
-      if(!code){setToast("Введите промокод");return Promise.resolve();}
-      return rpc("redeem_promocode",{p_code:code}).then(function(result){
-        state.balance=Number(result.balance)||state.balance;return refreshProfile();
-      }).then(function(){render();setToast("Промокод активирован");});
-    }
-    function adminSetBalance(userId) {
-      var input=document.querySelector('[data-balance-user="'+userId+'"]');
-      return rpc("admin_set_balance",{p_user_id:userId,p_balance:Number(input&&input.value)}).then(function(){setToast("Баланс обновлён");return loadAdminTab("users");});
-    }
-    function adminGrantSkin(userId) {
-      var select=document.querySelector('[data-skin-user="'+userId+'"]');
-      return rpc("admin_grant_skin",{p_user_id:userId,p_skin_id:select&&select.value}).then(function(){setToast("Предмет выдан");return loadAdminTab("users");});
-    }
-    function adminSaveSettings() {
-      return rpc("admin_save_settings",{
-        p_rtp:Number(document.getElementById("admin-rtp").value)/100,
-        p_streamer_mode:document.getElementById("admin-streamer").checked,
-        p_banner_title:document.getElementById("admin-banner").value,
-        p_live_drop_speed:Number(document.getElementById("admin-speed").value)
-      }).then(function(){setToast("Настройки сохранены");return refreshPublic();}).then(function(){return loadAdminTab("settings");});
-    }
-    function adminSavePromo() {
-      return rpc("admin_save_promocode",{
-        p_code:document.getElementById("admin-promo-code").value,
-        p_reward:Number(document.getElementById("admin-promo-reward").value),
-        p_activations:Number(document.getElementById("admin-promo-limit").value)
-      }).then(function(){setToast("Промокод создан");return loadAdminTab("promos");});
-    }
-    document.addEventListener("click",function(event){
-      var button=closestAction(event.target);
-      if(!button)return;
-      var action=button.getAttribute("data-action");
-      if(action==="sound"){toggleSound();return;}
-      if(state.soundOn)playUiClick();
-      if(action==="home"||action==="catalog")navigate("cases");
-      else if(action==="nav")navigate(button.getAttribute("data-page"));
-      else if(action==="profile")navigate("profile");
-      else if(action==="menu"){var nav=document.getElementById("main-nav");if(nav)nav.classList.toggle("open");}
-      else if(action==="auth-open"){state.authDialog=button.getAttribute("data-mode");render();}
-      else if(action==="auth-close"){state.authDialog=null;render();}
-      else if(action==="logout")task(signOut());
-      else if(action==="demo")task(addBalance(1000));
-      else if(action==="profile-bonus")task(addBalance(5000));
-      else if(action==="bonus")task(addBalance(500));
-      else if(action==="help")setToast("Баланс и предметы виртуальные, синхронизируются с аккаунтом Supabase. Платежей и вывода нет.");
-      else if(action==="scroll-cases"){var catalog=document.getElementById("catalog");if(catalog)catalog.scrollIntoView({behavior:"smooth"});}
-      else if(action==="open-case"){state.caseId=button.getAttribute("data-id");state.page="cases";state.quantity=1;state.winnings=null;render();}
-      else if(action==="back"){if(state.rolling){setToast("Дождитесь результата открытия кейса");return;}state.caseId=null;state.winnings=null;render();}
-      else if(action==="risk"){if(state.rolling)return;state.risk=button.getAttribute("data-risk");render();}
-      else if(action==="quantity"){if(state.rolling)return;state.quantity=Number(button.getAttribute("data-value"))||1;render();}
-      else if(action==="fast"){if(state.rolling)return;state.fast=!state.fast;render();}
-      else if(action==="open")task(startOpen());
-      else if(action==="claim")task(finishWinnings(false));
-      else if(action==="sell-winnings")task(finishWinnings(true));
-      else if(action==="sell-item")task(sellItem(button.getAttribute("data-uid")));
-      else if(action==="sell-all")task(sellAll());
-      else if(action==="upgrade-mode"){state.upgradeMode=button.getAttribute("data-mode");render();}
-      else if(action==="source"){
-        state.sourceUid=button.getAttribute("data-uid");
-        var candidates=targetCandidates();
-        if(candidates.length&&!candidates.some(function(item){return item.id===state.targetId;}))state.targetId=candidates[0].id;
-        render();
-      }
-      else if(action==="target-button"){state.targetId=button.getAttribute("data-id");render();}
-      else if(action==="upgrade")task(runUpgrade());
-      else if(action==="craft")task(runContract());
-      else if(action==="filter"){state.filter=button.getAttribute("data-filter");render();}
-      else if(action==="redeem-promo")task(redeemPromo());
-      else if(action==="save-name"){
-        var input=document.querySelector('[data-action="nickname"]'),name=input?input.value.trim().slice(0,18):"";
-        if(!name){setToast("Никнейм не может быть пустым");return;}
-        task(rpc("set_username",{p_username:name}).then(function(profile){applyProfile(profile);render();setToast("Никнейм обновлён");}));
-      }
-      else if(action==="admin-tab")task(loadAdminTab(button.getAttribute("data-tab")));
-      else if(action==="admin-refresh"){task(refreshPublic().then(function(){return loadAdminTab(state.adminTab);}).then(function(){setToast("Данные обновлены");}));}
-      else if(action==="admin-new-case"){state.adminCase={isNew:true,id:"",name:"",price:99,category:"popular",badge:"",icon:"✦",theme:"violet",description:"",items:[]};render();}
-      else if(action==="admin-edit-case"){state.adminCase=state.dbCases.filter(function(item){return item.id===button.getAttribute("data-id");})[0]||null;render();}
-      else if(action==="admin-case-cancel"){state.adminCase=null;render();}
-      else if(action==="admin-save-case")task(saveAdminCase());
-      else if(action==="admin-delete-case"){
-        var caseId=button.getAttribute("data-id");
-        if(window.confirm("Удалить этот кейс?"))task(rpc("admin_delete_case",{p_case_id:caseId}).then(function(){setToast("Кейс удалён");return refreshPublic();}).then(function(){return loadAdminTab("cases");}));
-      }
-      else if(action==="admin-set-balance")task(adminSetBalance(button.getAttribute("data-id")));
-      else if(action==="admin-grant-skin")task(adminGrantSkin(button.getAttribute("data-id")));
-      else if(action==="admin-import-skins")task(adminImportSkins());
-      else if(action==="admin-ban"){
-        var userId=button.getAttribute("data-id"),ban=button.getAttribute("data-banned")!=="true";
-        task(rpc("admin_set_ban",{p_user_id:userId,p_is_banned:ban}).then(function(){setToast(ban?"Пользователь заблокирован":"Блокировка снята");return loadAdminTab("users");}));
-      }
-      else if(action==="admin-save-settings")task(adminSaveSettings());
-      else if(action==="admin-save-promo")task(adminSavePromo());
-      else if(action==="admin-delete-promo")task(rpc("admin_delete_promocode",{p_promo_id:button.getAttribute("data-id")}).then(function(){setToast("Промокод удалён");return loadAdminTab("promos");}));
-    });
-    document.addEventListener("submit",function(event){
-      if(event.target.getAttribute("data-form")!=="auth")return;
-      event.preventDefault();task(submitAuth(event.target));
-    });
-    document.addEventListener("change",function(event){
-      var target=event.target;
-      if(!target||!target.getAttribute)return;
-      var action=target.getAttribute("data-action");
-      if(action==="target"){state.targetId=target.value;render();}
-      if(action==="stake"||action==="stake-range"){
-        var enteredStake=Math.max(0,Number(target.value)||0);
-        state.stake=state.upgradeMode==="balance"?Math.min(enteredStake,state.balance):enteredStake;
-        var valid=targetCandidates();
-        if(valid.length&&!valid.some(function(item){return item.id===state.targetId;}))state.targetId=valid[0].id;
-        render();
-      }
-    });
-    document.addEventListener("input",function(event){
-      var target=event.target;
-      if(!target||!target.getAttribute)return;
-      var action=target.getAttribute("data-action");
-      if(target.id==="admin-rtp"){
-        var rtpLabel=document.getElementById("rtp-value");
-        if(rtpLabel)rtpLabel.textContent=target.value+"%";
-      }
-      if(action==="stake"||action==="stake-range"){
-        var enteredStake=Math.max(0,Number(target.value)||0);
-        state.stake=state.upgradeMode==="balance"?Math.min(enteredStake,state.balance):enteredStake;
-        var value=document.querySelector('[data-action="stake"]'),range=document.querySelector('[data-action="stake-range"]');
-        var selected=document.querySelector(".selected-value b");
-        if(value&&Number(value.value)!==state.stake)value.value=String(state.stake);
-        if(range&&target!==range)range.value=String(Math.min(Math.max(1,state.stake),Math.max(1,state.balance)));
-        if(selected)selected.textContent=money(state.stake);
-        var chance=document.querySelector(".chance"),chanceLabel=document.querySelector(".chance>div>b"),hint=document.querySelector(".chance-hint");
-        if(chance&&chanceLabel){
-          var candidate=targetCandidates();
-          if(candidate.length&&!candidate.some(function(item){return item.id===state.targetId;}))state.targetId=candidate[0].id;
-          var current=currentTarget(),chanceValue=state.stake>0&&current.price>state.stake?Math.max(1,Math.min(75,Math.floor(state.stake/current.price*75))):0;
-          chance.style.setProperty("--angle",(chanceValue*3.6)+"deg");chanceLabel.innerHTML=chanceValue+'<i>%</i>';
-          if(hint)hint.textContent="Успех: "+chanceValue+"%　·　Сгорание: "+(chanceValue?100-chanceValue:0)+"%";
-          var preview=document.querySelector(".target-preview");
-          if(preview&&candidate.length){
-            var safeItem=current;
-            preview.className="target-preview "+safeItem.rarity;
-            preview.innerHTML=itemArt(safeItem)+'<span>'+RARITY_LABEL[safeItem.rarity]+'</span><b>'+escapeHtml(safeItem.name)+'</b><small>'+escapeHtml(safeItem.hero)+'</small><strong>'+money(safeItem.price)+'</strong>';
-            var select=document.querySelector('[data-action="target"]');
-            if(select){select.innerHTML=candidate.map(function(item){return '<option value="'+item.id+'" '+(item.id===safeItem.id?"selected":"")+'>'+escapeHtml(item.name)+' — '+money(item.price)+'</option>';}).join("");}
-            var quick=document.querySelector(".quick-targets");
-            if(quick)quick.innerHTML=candidate.slice(0,4).map(function(item){return '<button data-action="target-button" data-id="'+item.id+'" class="'+(item.id===safeItem.id?"selected":"")+'">'+escapeHtml(item.icon)+'<small>'+money(item.price)+'</small></button>';}).join("");
-          }
-        }
-      }
-    });
-    function initialize() {
-      render();
-      if(!db){setToast("Supabase JS не загрузился. Проверьте подключение к CDN.");return;}
-      db.auth.onAuthStateChange(function(event,session){
-        state.session=session;state.user=session?session.user:null;
-        if(!state.user){
-          state.role="user";state.isBanned=false;state.balance=0;state.inventory=[];
-          if(state.page!=="cases"){state.page="cases";state.caseId=null;}
-          render();
-        }else{
-          window.setTimeout(function(){
-            refreshAccount().then(function(){render();}).catch(function(error){console.error(error);setToast(error.message||"Не удалось загрузить профиль");});
-          },0);
-        }
-      });
-      db.auth.getSession().then(function(result){
-        if(result.error)throw result.error;
-        state.session=result.data.session;state.user=state.session?state.session.user:null;
-        return refreshPublic();
-      }).then(function(){
-        return state.user?refreshAccount():null;
-      }).then(function(){initDrops();render();}).catch(function(error){
-        console.error(error);initDrops();render();setToast("Ошибка подключения к Supabase: "+(error.message||"проверьте URL, ключ и SQL-скрипт"));
-      });
-    }
-    initDrops();initialize();
-    window.setTimeout(updateLive,Math.max(1,Number(state.settings.live_drop_speed)||5)*1000);
-    window.setInterval(updateCountdown,1000);
-  })();
+    if(db)init();else{render();toast("Supabase JS не загрузился");}
   </script>
 </body>
 </html>
